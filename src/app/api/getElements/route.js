@@ -7,5 +7,9 @@ export async function GET (request){
     .from('medicines')
     .select('*')
 
+    if(error){
+        console.log(error)
+    }
+
     return new Response(JSON.stringify(data))
 }
