@@ -1,5 +1,7 @@
 import getDb  from '@/functions/getDb';
 
+export const revalidate = 0
+
 export async function GET (request){
     let supabase = getDb();
 
