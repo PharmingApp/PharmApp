@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import getDb  from '@/functions/getDb';
 
 export const revalidate = 0
@@ -13,5 +14,8 @@ export async function GET (request){
         console.log(error)
     }
 
-    return new Response(JSON.stringify(data))
+    
+    return NextResponse.json(data)
 }
+
+// https://nextjs.org/docs/app/building-your-application/routing/router-handlers 
