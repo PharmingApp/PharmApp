@@ -1,4 +1,7 @@
+import { NextResponse } from 'next/server';
 import getDb  from '@/functions/getDb';
+
+export const revalidate = 0
 
 export async function GET (request){
     let supabase = getDb();
@@ -7,5 +10,12 @@ export async function GET (request){
     .from('medicines')
     .select('*')
 
-    return new Response(JSON.stringify(data))
+    if(error){
+        console.log(error)
+    }
+
+    
+    return NextResponse.json(data)
 }
+
+// https://nextjs.org/docs/app/building-your-application/routing/router-handlers 
