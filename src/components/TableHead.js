@@ -1,30 +1,35 @@
-
-export default function TableHead({ name }){
+export default function TableHead({ name, data }){
     return(
         <>
             <table>
                 <tbody>
                     <tr>
-                        <th className="p-4">Company</th>
-                        <th className="p-4">Contact</th>
-                        <th className="p-4">Country</th>
+                        {
+                            Object.keys(data[0]).map((item) => {
+                                return(
+                                    <th className="p-4">{item}</th>
+                                )
+                            })
+                        }
                     </tr>
-                    <tr>
-                        <td className="p-4">Alfreds Futterkiste</td>
-                        <td className="p-4">Maria Anders</td>
-                        <td className="p-4">Germany</td>
-                    </tr>
-                    <tr>
-                        <td className="p-4">Centro comercial Moctezuma</td>
-                        <td className="p-4">Francisco Chang</td>
-                        <td className="p-4">Mexico</td>
-                    </tr>
+                    
+                    {
+                        data.map((item) => {
+                            return(
+                                <tr>
+                                    <td className="p-4">{item.id}</td>
+                                    <td className="p-4">{item.name}</td>
+                                    <td className="p-4">{item.price}</td>
+                                </tr>
+                            )
+                        })
+                    }
                 </tbody>
             </table>
 
-            <h1>
+            <p>
                 {name}
-            </h1>
+            </p>
         </>
         
     )
