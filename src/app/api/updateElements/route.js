@@ -1,4 +1,5 @@
 import getDb from '@/functions/getDb'
+import { NextResponse } from 'next/server'
 
 export const revalidate = 0
 
@@ -14,5 +15,5 @@ export async function GET() {
         return new Response('Error') 
     }
 
-    return new Response(data) 
+    return NextResponse.json(data) 
 }

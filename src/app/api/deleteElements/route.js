@@ -1,4 +1,5 @@
 import getDb  from '@/functions/getDb';
+import { NextResponse } from 'next/server';
 
 export async function GET (request){
     let supabase = getDb();
@@ -12,5 +13,5 @@ export async function GET (request){
         console.log(error)
     }
 
-    return new Response(JSON.stringify(data))
+    return NextResponse.json(JSON.stringify(data))
 }
