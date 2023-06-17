@@ -1,11 +1,16 @@
+// Data should be an array of objects
+// Keys in the format of itemId-ColumnName has been assigned to each cell
+
 export default function TableHead({ name, data }){
+    const keys = Object.keys(data[0])
+
     return(
         <>
             <table>
                 <tbody>
                     <tr>
                         {
-                            Object.keys(data[0]).map((item) => {
+                            keys.map((item) => {
                                 return(
                                     <th className="p-4" key={item}>{item}</th>
                                 )
@@ -17,9 +22,14 @@ export default function TableHead({ name, data }){
                         data.map((item) => {
                             return(
                                 <tr key={item.id}>
-                                    <td className="p-4">{item.id}</td>
-                                    <td className="p-4">{item.name}</td>
-                                    <td className="p-4">{item.price}</td>
+                                    {
+                                        Object.keys(item).map((key) => {
+                                            return(
+                                                <td className="p-4" key={`${item.id}-${key}`}>{item[key]}</td>
+                                            )
+                                        })  
+                                    }
+                                    
                                 </tr>
                             )
                         })
