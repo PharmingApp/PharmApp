@@ -6,21 +6,21 @@
 
 // ["id", "name", "price"] keys
 
-export function DataRow({ item, columns }){
+export function DataRow({ item, columns, primaryKey }){
     return(
         <>
             {
                 columns.map((column) => {
-                    if (column === "id"){
+                    if (column === primaryKey){
                         return (
-                            <td className="p-4" key={`${item.id}-${column}`}>
+                            <td className="p-4" key={`${item[primaryKey]}-${column}`}>
                                 {item[column]}
                             </td>
                         ) 
                     }
                     else {
                         return(
-                            <td className="p-4" key={`${item.id}-${column}`}>
+                            <td className="p-4" key={`${item[primaryKey]}-${column}`}>
                                 <input type="text" defaultValue={item[column]} className=" text-center" />
                             </td>
                         )
@@ -31,14 +31,14 @@ export function DataRow({ item, columns }){
     )
 }
 
-export function DataRows({ data, columns }){
+export function DataRows({ data, columns, primaryKey }){
     return (
         <>
             {
                 data.map((item) => {
                     return(
-                        <tr key={item.id}>
-                            <DataRow item={item} columns={columns} />
+                        <tr key={item[primaryKey]}>
+                            <DataRow item={item} columns={columns} primaryKey={primaryKey} />
                         </tr>
                     )
                 })
@@ -61,7 +61,7 @@ export function TableHeaders({ columns }){
     )
 }
 
-export default function Table({ name, data }){
+export default function Table({ name, data, primaryKey }){
     const columns = Object.keys(data[0])
 
     return(
@@ -72,7 +72,7 @@ export default function Table({ name, data }){
                         <TableHeaders columns={columns} />
                     </tr>
                     
-                    <DataRows data={data} columns={columns} />
+                    <DataRows data={data} columns={columns} primaryKey={primaryKey} />
                 </tbody>
             </table>
 
