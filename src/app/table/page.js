@@ -1,4 +1,4 @@
-import TableHead from "../../components/TableHead.js";
+import Table from "@/src/components/Table.js";
 
 
 export default async function Page() {
@@ -15,7 +15,7 @@ export default async function Page() {
   
   return (
     <div>
-      <TableHead name={"Medicines"} data={data}/>
+      <Table name={"Medicines"} data={data}/>
     </div>
   );
 }
