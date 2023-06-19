@@ -15,7 +15,7 @@ export default async function Page() {
   
   return (
     <div>
-      <Table name={"Medicines"} data={data} primaryKey={"id"}/>
+      <Table name={"Medicines"} rows={data} primaryKey={"id"}/>
     </div>
   );
 }
