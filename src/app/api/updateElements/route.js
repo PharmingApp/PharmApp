@@ -21,4 +21,4 @@ export async function PUT(req) {
     }
 
     return NextResponse.json(data) 
-}
+} 

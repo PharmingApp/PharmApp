@@ -15,8 +15,18 @@ function LoginPage() {
   console.log(emailInput) 
   console.log(passInput) 
 
-  const onLoginButtonClick = (e) => {
+  const onLoginButtonClick = async (e) => {
     console.log(md5(passInput)) 
+    const res = await fetch(`/api/login`, {
+      method: 'PUT',
+      cache: 'no-cache',
+      body: JSON.stringify({
+        email: emailInput,
+        pass: passInput  
+      })
+      
+    })
+     
   }
 
   return (
