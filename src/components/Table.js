@@ -103,26 +103,31 @@ export default function Table({ name, rows, primaryKey }){
                 </tbody>
             </table>
 
-            <button onClick={
-                async (e) => {
-                    const keys = Object.keys(changes)
-                    for (let i = 0; i < keys.length; i++){
-                        const key = keys[i]
-                        let [id, column] = key.split("-")
-
-                        const res = await fetch(`/api/updateElements`, {
-                            method: 'PUT',
-                            cache: 'no-cache',
-                            body: JSON.stringify({
-                                primaryKey: primaryKey,
-                                id: id,
-                                column: column,
-                                value: changes[key]
+            {
+                Object.keys(changes).length > 0 ? <button onClick={
+                    async (e) => {
+                        const keys = Object.keys(changes)
+                        for (let i = 0; i < keys.length; i++){
+                            const key = keys[i]
+                            let [id, column] = key.split("-")
+    
+                            const res = await fetch(`/api/updateElements`, {
+                                method: 'PUT',
+                                cache: 'no-cache',
+                                body: JSON.stringify({
+                                    primaryKey: primaryKey,
+                                    id: id,
+                                    column: column,
+                                    value: changes[key]
+                            })
                         })
-                    })
+                        }
                     }
-                }
-            }>Save Changes</button>
+                }>Save Changes</button> : null
+                
+            }
+
+            
 
             <p>
                 {name}
