@@ -14,15 +14,33 @@ import clone from "@/functions/clone"
 
 let changes = {}
 
-function addChange(key, value){
-    changes[key] = value;
+function addEmptyRow(data, primaryKey){
+    let temp = clone(data[data.length - 1])
+    let columns = Object.keys(data[0])
+
+    for (let i = 0; i < columns.length; i++) {
+        if (columns[i] == primaryKey){
+        temp[columns[i]] = parseInt(temp[columns[i]]) + 1
+        }
+        else{
+        temp[columns[i]] = ""
+        }
+    }
+    data.push(temp)
 }
 
-export function DataRow({ item, data, setData, columns, primaryKey }){
+function addChange(key, value, action){
+    changes[key] = {
+        value: value,
+        action: action
+    };
+}
+
+export function DataRow({ item, data, setData, primaryKey }){
     return(
         <>
             {
-                columns.map((column) => {
+                Object.keys(item).map((column) => {
                     if (column === primaryKey){
                         return (
                             <td className="p-4" key={`${item[primaryKey]}-${column}`}>
@@ -34,17 +52,12 @@ export function DataRow({ item, data, setData, columns, primaryKey }){
                         return(
                             <td className="p-4" key={`${item[primaryKey]}-${column}`}>
                                 <input type="text" defaultValue={item[column]} className=" text-center" onChange={
-                                    function handleChange(event) {
-                                        for (let i = 0; i < data.length; i++){
-                                            if (data[i][primaryKey] === item[primaryKey]){
-                                                event.preventDefault()
-                                                data[i][column] = event.target.value
-                                                setData(clone(data))
-                                                addChange(`${item[primaryKey]}-${column}`, event.target.value)
-                                                console.log(changes)
-                                                break
-                                            }
-                                        }
+                                    (event) => {
+                                        event.preventDefault()
+                                        item[column] = event.target.value
+                                        addChange(`${item[primaryKey]}-${column}`, event.target.value, "update")
+                                        setData(clone(data))
+                                        console.log(changes)
                                     }
                                 }/>
                             </td>
@@ -56,14 +69,17 @@ export function DataRow({ item, data, setData, columns, primaryKey }){
     )
 }
 
-export function DataRows({ data, setData, columns, primaryKey }){
+export function DataRows({ data, setData, primaryKey }){
     return (
         <>
             {
                 data.map((item) => {
                     return(
                         <tr key={item[primaryKey]}>
-                            <DataRow item={item} data={data} setData={setData} columns={columns} primaryKey={primaryKey} />
+                            <DataRow item={item} 
+                            data={data} 
+                            setData={setData} 
+                            primaryKey={primaryKey} />
                         </tr>
                     )
                 })
@@ -87,19 +103,32 @@ export function TableHeaders({ columns }){
 }
 
 export default function Table({ name, rows, primaryKey }){
-    const [data, setData] = useState(rows)
+    const [data, setData] = useState(clone(rows))
 
-    const columns = Object.keys(data[0])
+    let temp = clone(data[data.length - 1])
+
+    let columns = Object.keys(temp)
+    
+    for (let i = 0; i < columns.length; i++){
+        if ((columns[i] != primaryKey) && (temp[columns[i]] != "")){
+            addEmptyRow(data, primaryKey)
+            break
+        }
+    }
+    
 
     return(
         <>
             <table>
                 <tbody>
                     <tr>
-                        <TableHeaders columns={columns} />
+                        <TableHeaders columns={Object.keys(temp)} />
                     </tr>
                     
-                    <DataRows data={data} setData={setData} columns={columns} primaryKey={primaryKey} />
+                    <DataRows 
+                    data={data} 
+                    setData={setData}
+                    primaryKey={primaryKey} />
                 </tbody>
             </table>
 
@@ -119,8 +148,8 @@ export default function Table({ name, rows, primaryKey }){
                                     id: id,
                                     column: column,
                                     value: changes[key]
+                                })
                             })
-                        })
                         }
                     }
                 }>Save Changes</button> : null

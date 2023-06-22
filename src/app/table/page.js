@@ -1,4 +1,5 @@
 import Table from "@/src/components/Table.js";
+import clone  from "@/functions/clone";
 
 
 export default async function Page() {
@@ -6,6 +7,8 @@ export default async function Page() {
     method: 'GET',
     cache: 'no-cache'
   })
+
+  let primaryKey = "id"
 
   if (!res.ok) {
     throw new Error('Failed to fetch data')
@@ -15,7 +18,7 @@ export default async function Page() {
   
   return (
     <div>
-      <Table name={"Medicines"} rows={data} primaryKey={"id"}/>
+      <Table name={"Medicines"} rows={data} primaryKey={primaryKey}/>
     </div>
   );
 }
