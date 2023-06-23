@@ -1,6 +1,4 @@
 'use client' 
-
-
 import React from 'react';
 import { useState } from 'react';
 
@@ -12,7 +10,9 @@ function LoginPage() {
   }
   const handlePassChange = (e) => {
     setPassInput(e.target.value) 
-  } 
+  }
+  console.log(emailInput) 
+  console.log(passInput) 
 
   const onLoginButtonClick = async (e) => {
     console.log(passInput) 
