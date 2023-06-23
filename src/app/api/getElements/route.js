@@ -9,11 +9,11 @@ export async function GET (request){
     let { data, error } = await supabase
     .from('medicines')
     .select('*')
+    .order('id')
 
     if(error){
         console.log(error)
     }
-
     
     return NextResponse.json(data)
 }
