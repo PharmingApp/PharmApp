@@ -6,19 +6,31 @@ export const revalidate = 0
 export async function PUT(req) {
     let supabase = getDb() 
 
-    let {primaryKey, id, column, value} = await req.json()
-    let updates = {}
-    updates[column] = value
+    let { primaryKey, changes, lastId } = await req.json()
+    let id = Object.keys(changes)[0]
+    let append = changes[id]
+    append[primaryKey] = id
 
-    let {data, error} = await supabase 
+    console.log(append)
+    const { data, error } = await supabase
     .from('medicines')
-    .update([updates])
-    .eq(primaryKey, id)
+    .upsert(append, { onConflict: 'id'})
+    .select()
+
 
     if (error) {
         console.log(error)
-        return new Response('Error') 
+        return new NextResponse.json({
+            error: true,
+            id: id,
+            message: error
+        })
     }
 
-    return NextResponse.json(data) 
+    console.log(data)
+    return NextResponse.json({
+        error: false,
+        id: id,
+        message: data
+    })
 } 

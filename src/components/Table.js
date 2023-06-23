@@ -13,6 +13,7 @@ import { useState } from "react"
 import clone from "@/functions/clone"
 
 let changes = {}
+let lastId = -1;
 
 function addEmptyRow(data, primaryKey){
     let temp = clone(data[data.length - 1])
@@ -30,10 +31,12 @@ function addEmptyRow(data, primaryKey){
 }
 
 function addChange(key, value, action){
-    changes[key] = {
-        value: value,
-        action: action
-    };
+    let [id, column] = key.split('-')
+    if (!changes[id]){
+        changes[id] = {}
+    }
+    changes[id][column] = value;
+
 }
 
 export function DataRow({ item, data, setData, primaryKey }){
@@ -57,7 +60,6 @@ export function DataRow({ item, data, setData, primaryKey }){
                                         item[column] = event.target.value
                                         addChange(`${item[primaryKey]}-${column}`, event.target.value, "update")
                                         setData(clone(data))
-                                        console.log(changes)
                                     }
                                 }/>
                             </td>
@@ -103,6 +105,7 @@ export function TableHeaders({ columns }){
 }
 
 export default function Table({ name, rows, primaryKey }){
+    lastId = rows[rows.length - 1][primaryKey];
     const [data, setData] = useState(clone(rows))
 
     let temp = clone(data[data.length - 1])
@@ -135,21 +138,24 @@ export default function Table({ name, rows, primaryKey }){
             {
                 Object.keys(changes).length > 0 ? <button onClick={
                     async (e) => {
-                        const keys = Object.keys(changes)
-                        for (let i = 0; i < keys.length; i++){
-                            const key = keys[i]
-                            let [id, column] = key.split("-")
-    
-                            const res = await fetch(`/api/updateElements`, {
-                                method: 'PUT',
-                                cache: 'no-cache',
-                                body: JSON.stringify({
-                                    primaryKey: primaryKey,
-                                    id: id,
-                                    column: column,
-                                    value: changes[key]
-                                })
+                        const res = await fetch(`/api/updateElements`, {
+                            method: 'PUT',
+                            cache: 'no-cache',
+                            body: JSON.stringify({
+                                primaryKey: primaryKey,
+                                changes: changes,
+                                lastId: lastId
                             })
+                        })
+
+                        let resJSON = await res.json()
+
+                        if (resJSON['error']){
+
+                        }
+                        else {
+                            changes = {}
+
                         }
                     }
                 }>Save Changes</button> : null
