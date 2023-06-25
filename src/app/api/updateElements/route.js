@@ -6,12 +6,26 @@ export const revalidate = 0
 export async function PUT(req) {
     let supabase = getDb() 
 
-    let { primaryKey, changes, lastId } = await req.json()
-    let id = Object.keys(changes)[0]
-    let append = changes[id]
-    append[primaryKey] = id
+    let { primaryKey, changes } = await req.json()
 
-    console.log(append)
+    if (Object.keys(changes).length == 0){
+        return NextResponse.json({
+            error: false,
+            id: null,
+            message: "No changes to update"
+        })
+    }
+
+    let append = []
+    for (let id in changes){
+        let temp = {}
+        temp[primaryKey] = id
+        for (let column in changes[id]){
+            temp[column] = changes[id][column]
+        }
+        append.push(temp)
+    }
+
     const { data, error } = await supabase
     .from('medicines')
     .upsert(append, { onConflict: 'id'})
@@ -20,9 +34,8 @@ export async function PUT(req) {
 
     if (error) {
         console.log(error)
-        return new NextResponse.json({
+        return NextResponse.json({
             error: true,
-            id: id,
             message: error
         })
     }
@@ -30,7 +43,6 @@ export async function PUT(req) {
     console.log(data)
     return NextResponse.json({
         error: false,
-        id: id,
         message: data
     })
 } 

@@ -13,7 +13,7 @@ import { useState } from "react"
 import clone from "@/functions/clone"
 
 let changes = {}
-let lastId = -1;
+let deletions = []
 
 function addEmptyRow(data, primaryKey){
     let temp = clone(data[data.length - 1])
@@ -46,9 +46,35 @@ export function DataRow({ item, data, setData, primaryKey }){
                 Object.keys(item).map((column) => {
                     if (column === primaryKey){
                         return (
-                            <td className="p-4" key={`${item[primaryKey]}-${column}`}>
-                                {item[column]}
-                            </td>
+                            <>
+                                <td key={`${item[primaryKey]}-del`}>
+                                    <button onClick=
+                                        {
+                                            (event) => {
+                                                console.log(deletions)
+                                                event.preventDefault()
+                                                if(changes[item[primaryKey]]){
+                                                    delete changes[item[primaryKey]]
+                                                }
+                                                else{
+                                                    if ((!deletions.includes(item[primaryKey]) && item[primaryKey] != data[data.length - 1][primaryKey])){
+                                                            deletions.push(item[primaryKey])
+
+                                                    }
+                                                    else{
+                                                        return
+                                                    }
+                                                }
+                                                setData(clone(data.filter((element) => element[primaryKey] != item[primaryKey])))
+                                            }       
+                                        }>
+                                        ❌
+                                    </button>
+                                </td>
+                                <td className="p-4" key={`${item[primaryKey]}-${column}`}>
+                                    {item[column]}
+                                </td>
+                            </>
                         ) 
                     }
                     else {
@@ -93,6 +119,7 @@ export function DataRows({ data, setData, primaryKey }){
 export function TableHeaders({ columns }){
     return(
         <>
+            <th key={"Del"}> Del</th>
             {
                 columns.map((column) => {
                     return(
@@ -105,7 +132,6 @@ export function TableHeaders({ columns }){
 }
 
 export default function Table({ name, rows, primaryKey }){
-    lastId = rows[rows.length - 1][primaryKey];
     const [data, setData] = useState(clone(rows))
 
     let temp = clone(data[data.length - 1])
@@ -136,27 +162,57 @@ export default function Table({ name, rows, primaryKey }){
             </table>
 
             {
-                Object.keys(changes).length > 0 ? <button onClick={
+                Object.keys(changes).length > 0 || deletions.length > 0 ? <button onClick={
                     async (e) => {
-                        const res = await fetch(`/api/updateElements`, {
-                            method: 'PUT',
-                            cache: 'no-cache',
-                            body: JSON.stringify({
-                                primaryKey: primaryKey,
-                                changes: changes,
-                                lastId: lastId
+                        let error = false
+                        let res = {}
+                        console.log(JSON.parse(JSON.stringify({
+                            primaryKey: primaryKey,
+                            changes: changes
+                        })))
+                        if (Object.keys(changes).length > 0){
+                            res = await fetch(`/api/updateElements`, {
+                                method: 'PUT',
+                                cache: 'no-cache',
+                                body: JSON.stringify({
+                                    primaryKey: primaryKey,
+                                    changes: changes
+                                })
                             })
-                        })
-
-                        let resJSON = await res.json()
-
-                        if (resJSON['error']){
-
+    
+                            res = await res.json()
+    
+                            if (res['error']){
+                                error = true
+                                console.log(res['message'])
+                            }
+                            else {
+                                changes = {}
+                            }
                         }
-                        else {
-                            changes = {}
-
+                        else if(!error && deletions.length > 0){
+                            
+                            console.log(primaryKey)
+                            console.log(deletions)
+                            res = await fetch(`/api/deleteElements`, {
+                                method: 'PUT',
+                                cache: 'no-cache',
+                                body: JSON.stringify({
+                                    primaryKey: primaryKey,
+                                    deletions: deletions
+                                })
+                            })
+    
+                            res = await res.json()
+    
+                            if (res['error']){
+                                console.log(res['message'])
+                            }
+                            else{
+                                deletions = []
+                            }
                         }
+                        setData(clone(data))
                     }
                 }>Save Changes</button> : null
                 
