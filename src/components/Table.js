@@ -12,6 +12,13 @@
 import { useState } from "react"
 import clone from "@/functions/clone"
 
+// Possible types are all html types mentioned here at https://www.w3schools.com/html/html_form_input_types.asp
+// If not mentioned, it is assumed to be text
+
+let inputType = {
+    "price": "number"
+}
+
 let changes = {}
 let deletions = []
 
@@ -51,7 +58,6 @@ export function DataRow({ item, data, setData, primaryKey }){
                                     <button onClick=
                                         {
                                             (event) => {
-                                                console.log(deletions)
                                                 event.preventDefault()
                                                 if(changes[item[primaryKey]]){
                                                     delete changes[item[primaryKey]]
@@ -80,14 +86,28 @@ export function DataRow({ item, data, setData, primaryKey }){
                     else {
                         return(
                             <td className="p-4" key={`${item[primaryKey]}-${column}`}>
-                                <input type="text" defaultValue={item[column]} className=" text-center" onChange={
-                                    (event) => {
-                                        event.preventDefault()
-                                        item[column] = event.target.value
-                                        addChange(`${item[primaryKey]}-${column}`, event.target.value, "update")
-                                        setData(clone(data))
-                                    }
-                                }/>
+                                {
+                                    inputType[column] ? (
+                                        <input type={inputType[column]} defaultValue={item[column]} className=" text-center" onChange={
+                                            (event) => {
+                                                event.preventDefault()
+                                                item[column] = event.target.value
+                                                addChange(`${item[primaryKey]}-${column}`, event.target.value, "update")
+                                                setData(clone(data))
+                                            }
+                                        }/>
+                                    ) : (
+                                        <input type="text" defaultValue={item[column]} className=" text-center" onChange={
+                                            (event) => {
+                                                event.preventDefault()
+                                                item[column] = event.target.value
+                                                addChange(`${item[primaryKey]}-${column}`, event.target.value, "update")
+                                                setData(clone(data))
+                                            }
+                                        }/>
+                                    )
+                                }
+                                
                             </td>
                         )
                     }
@@ -166,10 +186,6 @@ export default function Table({ name, rows, primaryKey }){
                     async (e) => {
                         let error = false
                         let res = {}
-                        console.log(JSON.parse(JSON.stringify({
-                            primaryKey: primaryKey,
-                            changes: changes
-                        })))
                         if (Object.keys(changes).length > 0){
                             res = await fetch(`/api/updateElements`, {
                                 method: 'PUT',
@@ -191,9 +207,6 @@ export default function Table({ name, rows, primaryKey }){
                             }
                         }
                         else if(!error && deletions.length > 0){
-                            
-                            console.log(primaryKey)
-                            console.log(deletions)
                             res = await fetch(`/api/deleteElements`, {
                                 method: 'PUT',
                                 cache: 'no-cache',
@@ -217,9 +230,6 @@ export default function Table({ name, rows, primaryKey }){
                 }>Save Changes</button> : null
                 
             }
-
-            
-
             <p>
                 {name}
             </p>

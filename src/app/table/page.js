@@ -15,6 +15,7 @@ export default async function Page() {
   }
 
   let data = await res.json()
+  console.log(data)
   
   return (
     <div>
