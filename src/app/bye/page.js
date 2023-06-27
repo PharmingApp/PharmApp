@@ -15,9 +15,7 @@ function LoginPage() {
   }
   const handlePassChange = (e) => {
     setPassInput(e.target.value) 
-  }
-  console.log(emailInput) 
-  console.log(passInput) 
+  } 
 
   const onLoginButtonClick = async (e) => {
     console.log(passInput) 
@@ -30,8 +28,6 @@ function LoginPage() {
         setWrongPass(true) 
       }
     } 
-
-     
   }
 
   return (
