@@ -19,9 +19,9 @@ export default async function Page() {
   console.log(data)
   
   return (
-  <div className="w-[1440px] h-256 p-[0px] bg-white flex-col justify-center items-center gap-[10px] inline-flex">
-    <div className="self-stretch h-[84px] py-[22px] bg-cyan-600 flex-col justify-start items-start gap-[10px] flex">
-        <div className="self-stretch h-10 text-center text-white text-[39px] font-bold">Database</div>
+    <div className="w-[1920px] h-[1080px] bg-white flex-col justify-start items-start gap-2.5 inline-flex">
+      <div className="self-stretch h-[84px] py-[22px] bg-cyan-600 flex-col justify-start items-start gap-2.5 flex">
+      <div className="self-stretch h-10 text-center text-white text-[39px] font-bold">Database</div>
     </div>
       <div className="flex mx-auto my-auto">
         <Table name={"Medicines"} rows={data} primaryKey={primaryKey}/>

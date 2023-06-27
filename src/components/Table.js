@@ -46,8 +46,11 @@ function addChange(key, value, action){
 
 }
 
+let inputCss = "text-center rounded-md"
+
 export function DataRow({ item, data, setData, primaryKey }){
     return(
+        <div className="bg-zinc-800">
         <>
             {
                 Object.keys(item).map((column) => {
@@ -88,7 +91,7 @@ export function DataRow({ item, data, setData, primaryKey }){
                             <td className="p-4" key={`${item[primaryKey]}-${column}`}>
                                 {
                                     inputType[column] ? (
-                                        <input type={inputType[column]} defaultValue={item[column]} className=" text-center" onChange={
+                                        <input type={inputType[column]} defaultValue={item[column]} className={inputCss} onChange={
                                             (event) => {
                                                 event.preventDefault()
                                                 item[column] = event.target.value
@@ -97,7 +100,7 @@ export function DataRow({ item, data, setData, primaryKey }){
                                             }
                                         }/>
                                     ) : (
-                                        <input type="text" defaultValue={item[column]} className=" text-center" onChange={
+                                        <input type="text" defaultValue={item[column]} className={inputCss} onChange={
                                             (event) => {
                                                 event.preventDefault()
                                                 item[column] = event.target.value
@@ -114,8 +117,11 @@ export function DataRow({ item, data, setData, primaryKey }){
                 })  
             }
         </>
+        </div>
     )
 }
+
+
 
 export function DataRows({ data, setData, primaryKey }){
     return (
@@ -230,9 +236,7 @@ export default function Table({ name, rows, primaryKey }){
                 }>Save Changes</button> : null
                 
             }
-            <p>
-                {name}
-            </p>
+        
         </>
         
     )
