@@ -1,6 +1,7 @@
 'use client' 
 import React from 'react';
 import { useState } from 'react';
+import Image from 'next/image';
 
 function LoginPage() {
   const [emailInput,setEmailInput] = useState("")
@@ -34,7 +35,7 @@ function LoginPage() {
         <div className="w-full max-w-xs py-4">
           <div className="flex items-center">
             <p className="text-white mx-r mb-3 font-sans text-2xl font-semibold">Mattakara Jan Aushadi</p>
-            <img className="mb-3 ml-6 w-12 h-12 " src="https://res.cloudinary.com/pumpkin517/image/upload/c_scale,h_128/v1651385416/624dd0a951a1e8a118215b1b24a0da59-pharmacy-logo_daskjg.png" alt = ""></img>
+            <Image className="mb-3 ml-6 w-12 h-12 " src="/logo.png" alt = "" width={200} height={200} />
           </div>
             <form className="bg-zinc-700 shadow-black shadow-2xl rounded-xl px-8 py-6">
               <div className="mb-4">
