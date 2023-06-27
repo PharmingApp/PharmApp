@@ -2,10 +2,14 @@
 import React from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
+import getDbClient from '@/functions/getDbClient.js' 
 
 function LoginPage() {
+  let supabase = getDbClient()
+
   const [emailInput,setEmailInput] = useState("")
   const [passInput,setPassInput] = useState("")
+  const [wrongPass,setWrongPass] = useState(false) 
   const handleEmailChange = (e) => {
     setEmailInput(e.target.value)
   }
@@ -17,15 +21,16 @@ function LoginPage() {
 
   const onLoginButtonClick = async (e) => {
     console.log(passInput) 
-    const res = await fetch(`/api/login`, {
-      method: 'PUT',
-      cache: 'no-cache',
-      body: JSON.stringify({
-        email: emailInput,
-        pass: passInput  
-      })
-      
-    })
+    let { data, error } = await supabase.auth.signInWithPassword({
+      email: emailInput,
+      password: passInput 
+})
+    if (error) {
+      if (error.status == 400) {
+        setWrongPass(true) 
+      }
+    } 
+
      
   }
 
@@ -50,6 +55,10 @@ function LoginPage() {
                 </label>
                 <input onChange={handlePassChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="********" />
               </div>
+              {
+                wrongPass ? <div><p>Wrong Password!</p></div> : null             
+              }
+              
               <div className="flex items-center justify-between">
                 <button onClick={onLoginButtonClick} className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
                   Sign In
