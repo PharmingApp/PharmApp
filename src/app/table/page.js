@@ -3,6 +3,7 @@ import React from 'react';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
   // const res = await fetch(`${process.env.HOST}/api/getElements`, {
