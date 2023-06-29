@@ -1,15 +1,22 @@
 'use client' 
-import React from 'react';
+import React, { use } from 'react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import getDbClient from '@/functions/getDbClient.js' 
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+
 
 function LoginPage() {
-  let supabase = getDbClient()
+  const router = useRouter()
+  const supabase = createClientComponentClient()
+
 
   const [emailInput,setEmailInput] = useState("")
   const [passInput,setPassInput] = useState("")
   const [wrongPass,setWrongPass] = useState(false) 
+
+
   const handleEmailChange = (e) => {
     setEmailInput(e.target.value)
   }
@@ -22,12 +29,16 @@ function LoginPage() {
     let { data, error } = await supabase.auth.signInWithPassword({
       email: emailInput,
       password: passInput 
-})
+    })
+    router.refresh()
     if (error) {
       if (error.status == 400) {
         setWrongPass(true) 
       }
     } 
+    else {
+      router.replace("/table")
+    }
   }
 
   return (

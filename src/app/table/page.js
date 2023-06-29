@@ -1,22 +1,28 @@
 import Table from "@/src/components/Table.js";
-import clone  from "@/functions/clone";
 import React from 'react';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 
 export default async function Page() {
-  const res = await fetch(`${process.env.HOST}/api/getElements`, {
-    method: 'GET',
-    cache: 'no-cache'
-  })
+  // const res = await fetch(`${process.env.HOST}/api/getElements`, {
+  //   method: 'GET',
+  //   cache: 'no-cache', 
+  // })
 
+
+  // if (!res.ok) {
+  //   throw new Error('Failed to fetch data')
+  // }
+
+  // let data = await res.json()
+  // console.log(data)
+  
+  let supabase = createServerComponentClient({ cookies })
+  let {data, error} = await supabase.from("medicines").select("*")
+
+  
   let primaryKey = "id"
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-
-  let data = await res.json()
-  console.log(data)
   
   return (
     <div className="w-[1920px] h-[1080px] bg-white flex-col justify-start items-start gap-2.5 inline-flex">

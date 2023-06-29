@@ -9,7 +9,7 @@
 
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import clone from "@/functions/clone"
 
 // Possible types are all html types mentioned here at https://www.w3schools.com/html/html_form_input_types.asp
@@ -50,13 +50,12 @@ let inputCss = "text-center rounded-md"
 
 export function DataRow({ item, data, setData, primaryKey }){
     return(
-        <div className="bg-zinc-800">
         <>
             {
                 Object.keys(item).map((column) => {
                     if (column === primaryKey){
                         return (
-                            <>
+                            <React.Fragment key={`${item[primaryKey]}-ids`}>
                                 <td key={`${item[primaryKey]}-del`}>
                                     <button onClick=
                                         {
@@ -83,7 +82,7 @@ export function DataRow({ item, data, setData, primaryKey }){
                                 <td className="p-4" key={`${item[primaryKey]}-${column}`}>
                                     {item[column]}
                                 </td>
-                            </>
+                            </React.Fragment>
                         ) 
                     }
                     else {
@@ -117,7 +116,6 @@ export function DataRow({ item, data, setData, primaryKey }){
                 })  
             }
         </>
-        </div>
     )
 }
 
