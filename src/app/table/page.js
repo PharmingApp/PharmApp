@@ -1,7 +1,9 @@
 import Table from "@/src/components/Table.js";
+import { redirect } from 'next/navigation'
 import React from 'react';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+
 
 export const dynamic = "force-dynamic";
 
@@ -18,10 +20,25 @@ export default async function Page() {
 
   // let data = await res.json()
   // console.log(data)
+
+  // let cookiesList = cookies().getAll()
+
+  // if(cookiesList.length == 0){
+  //   redirect('/login')
+  // }
+
+  // for(let i = 0; i < cookiesList.length; i++){
+  //   if(!cookiesList[i]['name'].includes('auth-token')){
+  //     redirect('/login')
+  //   }
+  // }
   
   let supabase = createServerComponentClient({ cookies })
   let {data, error} = await supabase.from("medicines").select("*")
 
+  if(data.length == 0){
+    data = [{id: 1, name: 'undefined'}]
+  }
   
   let primaryKey = "id"
   
