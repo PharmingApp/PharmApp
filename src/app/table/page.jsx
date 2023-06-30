@@ -1,4 +1,4 @@
-import Table from "@/src/components/Table.js";
+import Table from "@/src/components/Table.jsx";
 import { redirect } from 'next/navigation'
 import React from 'react';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
@@ -55,8 +55,4 @@ export default async function Page() {
 }
 
 
-
-
-
-
-
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
