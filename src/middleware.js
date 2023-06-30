@@ -11,10 +11,13 @@ export async function middleware(req) {
     if(cookiesList.length == 0){
       return NextResponse.redirect(new URL('/login', req.url))
     }
-  
-    for(let i = 0; i < cookiesList.length; i++){
-      if(!cookiesList[i]['name'].includes('auth-token')){
-        return NextResponse.redirect(new URL('/login', req.url))
+    else {
+
+      for(let i = 0; i < cookiesList.length; i++){
+        if(!cookiesList[i]['name'].includes('auth-token')){
+          return NextResponse.redirect(new URL('/login', req.url))
+          flag = true
+        }
       }
     }
   }

@@ -37,7 +37,7 @@ function LoginPage() {
       }
     } 
     else {
-      router.replace("/table")
+      router.replace("/dashboard")
     }
   }
 
