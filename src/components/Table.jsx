@@ -11,6 +11,7 @@
 
 import React, { useState } from "react"
 import clone from "@/functions/clone"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 // Possible types are all html types mentioned here at https://www.w3schools.com/html/html_form_input_types.asp
 // If not mentioned, it is assumed to be text
@@ -156,6 +157,7 @@ export function TableHeaders({ columns }){
 }
 
 export default function Table({ name, rows, primaryKey }){
+    let supabase = createClientComponentClient()
     const [data, setData] = useState(clone(rows))
 
     let temp = clone(data[data.length - 1])
@@ -188,46 +190,39 @@ export default function Table({ name, rows, primaryKey }){
             {
                 Object.keys(changes).length > 0 || deletions.length > 0 ? <button onClick={
                     async (e) => {
-                        let error = false
-                        let res = {}
-                        if (Object.keys(changes).length > 0){
-                            res = await fetch(`/api/updateElements`, {
-                                method: 'PUT',
-                                cache: 'no-cache',
-                                body: JSON.stringify({
-                                    primaryKey: primaryKey,
-                                    changes: changes
-                                })
-                            })
-    
-                            res = await res.json()
-    
-                            if (res['error']){
-                                error = true
-                                console.log(res['message'])
+
+                        let append = []
+                        for (let id in changes){
+                            let temp = {}
+                            temp[primaryKey] = id
+                            for (let column in changes[id]){
+                                temp[column] = changes[id][column]
                             }
-                            else {
-                                changes = {}
-                            }
+                            append.push(temp)
                         }
-                        else if(!error && deletions.length > 0){
-                            res = await fetch(`/api/deleteElements`, {
-                                method: 'PUT',
-                                cache: 'no-cache',
-                                body: JSON.stringify({
-                                    primaryKey: primaryKey,
-                                    deletions: deletions
-                                })
-                            })
-    
-                            res = await res.json()
-    
-                            if (res['error']){
-                                console.log(res['message'])
-                            }
-                            else{
-                                deletions = []
-                            }
+
+                        let { data: upsertData, error: upsertError } = await supabase
+                        .from('medicines')
+                        .upsert(append, { onConflict: 'id'})
+                        .select()
+
+                        if (upsertError){
+                            console.log(upsertError)
+                        }
+                        else {
+                            changes = {}
+                        }
+
+                        let { data: deleteData, error: deleteError } = await supabase
+                        .from('medicines')
+                        .delete()
+                        .in(primaryKey, deletions)
+
+                        if (deleteError){
+                            console.log(deleteError)
+                        }
+                        else {
+                            deletions = []
                         }
                         setData(clone(data))
                     }
