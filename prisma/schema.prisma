@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Users {
+  ID       Int     @id @default(autoincrement())
+  Email    String? @unique(map: "Email") @db.VarChar(30)
+  Password String? @db.TinyText
+  Role     String? @default(dbgenerated("(_utf8mb4\\'Guest\\')")) @db.TinyText
+}

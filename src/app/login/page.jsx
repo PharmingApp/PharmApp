@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import password from 'password-hash-and-salt';
 
 
 
@@ -25,20 +26,32 @@ function LoginPage() {
   } 
 
   const onLoginButtonClick = async (e) => {
-    console.log(passInput) 
-    let { data, error } = await supabase.auth.signInWithPassword({
-      email: emailInput,
-      password: passInput 
+    // let { data, error } = await supabase.auth.signInWithPassword({
+    //   email: emailInput,
+    //   password: passInput 
+    // })
+    // router.refresh()
+
+    let res = await fetch('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: emailInput,
+        password: passInput
+      })
     })
-    router.refresh()
+
+    let { data, error } = await res.json()
+
     if (error) {
-      if (error.status == 400) {
+      if (error.status == 401) {
         setWrongPass(true) 
       }
+      
+      else {
+        router.replace("/dashboard")
+      }
     } 
-    else {
-      router.replace("/dashboard")
-    }
+    
   }
 
   return (
