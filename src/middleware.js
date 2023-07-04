@@ -2,16 +2,17 @@
 import { NextResponse } from 'next/server';
 import verify from '@/functions/verify';
 
-export default function middleware(req){
+export default async function middleware(req){
     if (req.nextUrl.pathname.startsWith("/_next")) return NextResponse.next();
     if (req.nextUrl.pathname.includes(".")) return NextResponse.next();
+    
+    let accessTokenExpiry = 60 * 60 * 24;
 
     let token = req.cookies.get('pharm-app-jwt')
     let refreshToken = req.cookies.get('pharm-app-ref')
-    if((req.nextUrl.pathname !== '/login') && (req.nextUrl.pathname !== '/api/login')){
+    if((req.nextUrl.pathname !== '/login') && (req.nextUrl.pathname !== '/api/login') && (req.nextUrl.pathname !== '/api/refreshToken')){
         console.log(req.nextUrl.pathname)
         if((!token) || (!refreshToken)){
-            console.log(1)
             return NextResponse.redirect(new URL('/login', req.url))
         }
         else{
@@ -19,27 +20,50 @@ export default function middleware(req){
             refreshToken = refreshToken.value
 
             try{
-                let decoded = verify(token, process.env.JWT_TOKEN_SECRET)
+                let decoded = await verify(token, process.env.JWT_TOKEN_SECRET)
                 return NextResponse.next()
             }
             catch(err){
-                if(err.name === 'TokenExpiredError'){
+                if(err.name === 'JWTExpired'){
                     try{
-                        let decodedRef = verify(refreshToken, process.env.JWT_REFRESH_SECRET)
-                        return NextResponse.next()
+                        let decodedRef = await verify(refreshToken, process.env.JWT_REFRESH_SECRET, true)
+
+                        let resRefToken = await fetch(new URL("/api/refreshToken", req.url), {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                ID: decodedRef.ID,
+                                refreshToken: refreshToken
+                            })
+                        })
+                        let refToken = await resRefToken.json()
+                        
+                        req.cookies.set({
+                            name: 'pharm-app-jwt', 
+                            value: refToken,
+                            httpOnly: true
+                        })
+                        
+                        const response = NextResponse.redirect(new URL(req.nextUrl.pathname, req.url))
+                        response.cookies.set({
+                            name: 'pharm-app-jwt', 
+                            value: refToken,
+                            httpOnly: true
+                        });
+                        return response
+
                     }
                     catch(err){
-                        console.log(2)
                         return NextResponse.redirect(new URL('/login', req.url))
                     }
                 }
                 else{
-                    console.log(err)
                     return NextResponse.redirect(new URL('/login', req.url))
                 }
             }
         }
     }
+    
+
 
     return NextResponse.next()
 }

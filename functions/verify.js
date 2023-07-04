@@ -6,7 +6,7 @@ export default async function verify(token, secret, refresh=false) {
 
     if(refresh){
         if(Number.isInteger(payload.Random)){
-            return true;
+            return payload;
         }
     }
     else{

@@ -33,7 +33,7 @@ export async function POST(req){
             if(verified){
                 delete User.Password
                 User["Random"] = random.int(0, 1_000_000)
-                let token = await sign(User, process.env.JWT_TOKEN_SECRET)
+                let token = await sign(User, process.env.JWT_TOKEN_SECRET, accessTokenExpiry)
 
                 cookies().set({
                     name: 'pharm-app-jwt', 
@@ -41,7 +41,18 @@ export async function POST(req){
                     httpOnly: true
                 })
 
-                let refreshToken = await sign({ Random: random.int(0, 100_000_000) }, process.env.JWT_REFRESH_SECRET)
+                let rand = random.int(0, 100_000_000)
+
+                let refreshToken = await sign({ ID: User.ID, Random: rand }, process.env.JWT_REFRESH_SECRET, accessTokenExpiry * 365)
+
+                const updateRefToken = await prisma.users.update({
+                    where : {
+                        ID: User.ID
+                    },
+                    data : {
+                        userRefreshToken: refreshToken
+                    }
+                })
 
                 cookies().set({
                     name: 'pharm-app-ref', 
