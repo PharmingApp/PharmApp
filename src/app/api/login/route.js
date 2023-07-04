@@ -23,7 +23,7 @@ export async function POST(req){
     return new Promise((resolve, reject) => {
         password(pass).verifyAgainst(User.Password, async function(error, verified) {
             if(verified){
-                let token = jwt.sign(User, process.env.JWT_SECRET, { expiresIn: '1h' })
+                let token = jwt.sign(User, process.env.JWT_TOKEN_SECRET, { expiresIn: '1h' })
 
                 cookies().set('pharm-app-jwt', token)
 
