@@ -6,7 +6,6 @@ export default async function middleware(req){
     if (req.nextUrl.pathname.startsWith("/_next")) return NextResponse.next();
     if (req.nextUrl.pathname.includes(".")) return NextResponse.next();
     
-    let accessTokenExpiry = 60 * 60 * 24;
 
     let token = req.cookies.get('pharm-app-jwt')
     let refreshToken = req.cookies.get('pharm-app-ref')
