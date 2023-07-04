@@ -41,6 +41,8 @@ function LoginPage() {
     })
 
     let { data, error } = await res.json()
+    
+    console.log(data, error)
 
     if (error) {
       if (error.status == 401) {
