@@ -11,7 +11,7 @@ async function signOutHandle(e){
 
 export default function Dashboard(){
     return (
-        <div className="w-[1920px] h-[975px] p-2.5 bg-zinc-900 flex-col justify-center items-center inline-flex">
+        <div className=" h-screen w-screen p-2.5 bg-zinc-900 flex-col justify-center items-center inline-flex">
             <div className="self-stretch px-[29px] py-[18px] justify-end items-start gap-[147px] inline-flex">
                 <div className="px-[29px] py-[9px] bg-white rounded-[25px] justify-center items-center gap-2.5 flex">
                     <div className="text-center text-zinc-900 text-[18px] font-bold">
