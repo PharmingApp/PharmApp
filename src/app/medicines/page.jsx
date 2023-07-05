@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import React from 'react';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
-
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -43,14 +43,22 @@ export default async function Page() {
   let primaryKey = "id"
   
   return (
-    <div className="w-[1920px] h-[1080px] bg-white flex-col justify-start items-start gap-2.5 inline-flex">
-      <div className="self-stretch h-[84px] py-[22px] bg-cyan-600 flex-col justify-start items-start gap-2.5 flex">
-      <div className="self-stretch h-10 text-center text-white text-[39px] font-bold">Database</div>
-    </div>
-      <div className="flex mx-auto my-auto">
-        <Table name={"Medicines"} rows={data} primaryKey={primaryKey}/>
+    <div className="w-screen h-screen p-2.5 bg-zinc-900 justify-start items-start gap-2.5">
+      <div className="grow shrink basis-0 h-[100px] py-5 px-5 bg-zinc-900 justify-start items-start gap-2.5 flex rounded-[25px]">
+      <div className="w-screen h-[124px] pl-36 pb-5 text-center text-white text-[53px] pt-2 font-bold">Database</div>
+        <div className="px-[29px] py-[9px] bg-white rounded-[25px] justify-center items-center gap-2.5 flex">
+          <div className="text-center text-zinc-900 text-[18px] font-bold">
+            <Link href="/dashboard">
+              Dashboard
+            </Link>
+          </div>
+        </div>
       </div>
-  </div>
+      <div className="flex w-fit h-fit justify-center text-white py-5">
+          <Table name={"Medicines"} rows={data} primaryKey={primaryKey}/>
+      </div>
+    </div>
+
   );
 }
 

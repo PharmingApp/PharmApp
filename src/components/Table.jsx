@@ -47,7 +47,7 @@ function addChange(key, value, action){
 
 }
 
-let inputCss = "text-center rounded-md"
+let inputCss = "text-center text-zinc-900 rounded-md"
 
 export function DataRow({ item, data, setData, primaryKey }){
     return(
@@ -128,7 +128,7 @@ export function DataRows({ data, setData, primaryKey }){
             {
                 data.map((item) => {
                     return(
-                        <tr key={item[primaryKey]}>
+                        <tr className="text-white" key={item[primaryKey]}>
                             <DataRow item={item} 
                             data={data} 
                             setData={setData} 
