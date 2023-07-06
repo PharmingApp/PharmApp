@@ -5,7 +5,7 @@ import clone from "@/functions/clone"
 
 let inpLength = 0;
 
-export function InvoiceSearch({ searchObjs, receipt, setReceipt }){
+export function InvoiceSearch({ searchObjs, receipt, setReceipt, data }){
     const [searchResults, setSearchResults] = useState(clone(searchObjs))
 
     return(
@@ -48,9 +48,9 @@ export function InvoiceSearch({ searchObjs, receipt, setReceipt }){
                             className="flex flex-row justify-between items-center"
                             onClick={
                                 (e) => {
-                                    setReceipt(clone(receipt).concat(searchResults[name]))
+                                    receipt[searchResults[name]] = data[searchResults[name]]
+                                    setReceipt(clone(receipt))
                                     delete searchResults[name]
-                                    console.log(receipt)
                                 }
                             }>
                                 <p className="text-zinc-900">{name}</p>
@@ -70,7 +70,6 @@ export function InvoiceSearch({ searchObjs, receipt, setReceipt }){
 export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantity, itemPrice }){
     let searchObjs = {}
 
-    const [receipt, setReceipt] = useState([])
 
     let ids = Object.keys(data)
     let columns = Object.keys(data[ids[0]]).filter((column) => column != primaryKey && column != totalQuantity && column != "total")
@@ -81,10 +80,12 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
         data[id]["quantity"] = 0
         data[id]["total"] = 0
     })
+    const [receipt, setReceipt] = useState({})
+    let netTotal = 0
 
     return(
         <>
-            <InvoiceSearch searchObjs={searchObjs} receipt={receipt} setReceipt={setReceipt}/>
+            <InvoiceSearch searchObjs={searchObjs} receipt={receipt} setReceipt={setReceipt} data={data}/>
 
             <table>
                 <tbody>
@@ -106,34 +107,48 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
                         </th>
                     </tr>
                     {
-                        receipt.map((item) => {
-                            item = data[item]
+                        Object.keys(receipt).map((id) => {
+                            let item = receipt[id]
                             return(
-                                <tr key={item[primaryKey]}>
+                                <tr key={id}>
                                     {
                                         columns.map((column) => {
                                             return(
-                                                <td key={`${item[primaryKey]}-${column}`}>
+                                                <td key={`${id}-${column}`}>
                                                     {item[column]}
                                                 </td>
                                             )
                                         })
                                     }
                                     <td>
-                                        <input type="number" defaultValue={0} onChange={(e) => {
-                                            item["quantity"] = e.target.value
-                                            item["amount"] = item["quantity"] * item[itemPrice]
+                                        <input type="number" defaultValue={0} className="text-center text-zinc-900 rounded-md" onChange={(e) => {
+                                            item["quantity"] = parseInt(e.target.value)
+                                            item["total"] = (item["quantity"] * item[itemPrice]).toFixed(2)
                                             setReceipt(clone(receipt))
+                                            console.log(receipt)
                                         }} />
                                     </td>
-                                    <td defaultValue={0}>
-                                        {item["amount"]}
+                                    <td>
+                                        {item["total"]}
                                     </td>
                                 </tr>
                             )
                         })
                     }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Net Total</td>
+                        <td></td>
+                        <td></td>
+                        {
+                            Object.keys(receipt).map(id => {
+                                netTotal += parseFloat(receipt[id]["total"])
+                            })
+                        }
+                        <td>{netTotal.toFixed(2)}</td>
+                    </tr>
+                </tfoot>
             </table>
             
         </>
