@@ -55,7 +55,7 @@ export default async function Page() {
         </div>
       </div>
       <div className="flex w-fit h-fit justify-center text-white py-5">
-          <Table name={"Medicines"} rows={data} primaryKey={primaryKey}/>
+          <Table rows={data} primaryKey={primaryKey}/>
       </div>
     </div>
 

@@ -156,7 +156,7 @@ export function TableHeaders({ columns }){
     )
 }
 
-export default function Table({ name, rows, primaryKey }){
+export default function Table({ rows, primaryKey }){
     let supabase = createClientComponentClient()
     const [data, setData] = useState(clone(rows))
 

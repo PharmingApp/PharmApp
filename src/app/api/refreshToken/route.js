@@ -1,4 +1,3 @@
-
 import random from 'random'
 import sign from '@/functions/sign'
 import { NextResponse } from 'next/server';
