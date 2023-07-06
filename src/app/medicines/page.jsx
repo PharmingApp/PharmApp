@@ -4,34 +4,12 @@ import React from 'react';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import Link from "next/link";
+import fs from 'fs'
+import YAML from 'yaml'
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  // const res = await fetch(`${process.env.HOST}/api/getElements`, {
-  //   method: 'GET',
-  //   cache: 'no-cache', 
-  // })
-
-
-  // if (!res.ok) {
-  //   throw new Error('Failed to fetch data')
-  // }
-
-  // let data = await res.json()
-  // console.log(data)
-
-  // let cookiesList = cookies().getAll()
-
-  // if(cookiesList.length == 0){
-  //   redirect('/login')
-  // }
-
-  // for(let i = 0; i < cookiesList.length; i++){
-  //   if(!cookiesList[i]['name'].includes('auth-token')){
-  //     redirect('/login')
-  //   }
-  // }
   
   let supabase = createServerComponentClient({ cookies })
   let {data, error} = await supabase.from("medicines").select("*")
@@ -40,7 +18,9 @@ export default async function Page() {
     data = [{id: 1, name: 'undefined'}]
   }
   
-  let primaryKey = "id"
+  let file = fs.readFileSync('./src/config.yaml', 'utf8')
+
+  let primaryKey = YAML.parse(file).Medicines.primaryKey
   
   return (
     <div className="w-screen h-screen p-2.5 bg-zinc-900 justify-start items-start gap-2.5">

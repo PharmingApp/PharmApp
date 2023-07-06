@@ -1,4 +1,6 @@
 import InvoiceTable from "../../components/InvoiceTable";
+import fs from 'fs'
+import YAML from 'yaml'
 
 export default function Page(){
     const data = {
@@ -54,8 +56,14 @@ export default function Page(){
         },
     }
 
+    let file = fs.readFileSync('./src/config.yaml', 'utf8')
+    let primaryKey = YAML.parse(file).Medicines.primaryKey
+    let searchFor = YAML.parse(file).Medicines.Name
+    let totalQuantity = YAML.parse(file).Medicines.quantityInStock
+    let itemPrice = YAML.parse(file).Medicines.Price
+
     return(
-        <InvoiceTable data={data} searchFor={'name'} primaryKey={"id"}/>
+        <InvoiceTable data={data} searchFor={searchFor} primaryKey={primaryKey} totalQuantity={totalQuantity} itemPrice={itemPrice}/>
     )
 }
 

@@ -67,16 +67,19 @@ export function InvoiceSearch({ searchObjs, receipt, setReceipt }){
 
 
 
-export default function InvoiceTable({ data, searchFor, primaryKey }){
+export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantity, itemPrice }){
     let searchObjs = {}
 
     const [receipt, setReceipt] = useState([])
 
     let ids = Object.keys(data)
-    let columns = Object.keys(data[ids[0]])
+    let columns = Object.keys(data[ids[0]]).filter((column) => column != primaryKey && column != totalQuantity && column != "total")
+
 
     ids.map((id) => {
         searchObjs[data[id][searchFor].toLowerCase()] = id
+        data[id]["quantity"] = 0
+        data[id]["total"] = 0
     })
 
     return(
@@ -95,6 +98,12 @@ export default function InvoiceTable({ data, searchFor, primaryKey }){
                                 )
                             })
                         }
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Total
+                        </th>
                     </tr>
                     {
                         receipt.map((item) => {
@@ -110,6 +119,16 @@ export default function InvoiceTable({ data, searchFor, primaryKey }){
                                             )
                                         })
                                     }
+                                    <td>
+                                        <input type="number" defaultValue={0} onChange={(e) => {
+                                            item["quantity"] = e.target.value
+                                            item["amount"] = item["quantity"] * item[itemPrice]
+                                            setReceipt(clone(receipt))
+                                        }} />
+                                    </td>
+                                    <td defaultValue={0}>
+                                        {item["amount"]}
+                                    </td>
                                 </tr>
                             )
                         })
