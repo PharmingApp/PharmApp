@@ -2,8 +2,7 @@ import Table from "@/src/components/Table.jsx";
 import React from 'react';
 import { cookies } from 'next/headers'
 import Link from "next/link";
-import fs from 'fs'
-import YAML from 'yaml'
+import config from '../../config'
 
 export const dynamic = "force-dynamic"; 
 
@@ -22,10 +21,9 @@ export default async function Page() {
   if(data.length == 0){
     data = [{id: 1, name: 'undefined'}]
   }
-  
-  let file = fs.readFileSync('./src/config.yaml', 'utf8')
 
-  let primaryKey = YAML.parse(file).Medicines.primaryKey
+  let primaryKey = config.Medicines.primaryKey
+
   
   return (
     <div className="w-screen h-screen p-2.5 bg-zinc-900 justify-start items-start gap-2.5">
