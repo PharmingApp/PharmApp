@@ -11,7 +11,7 @@ export default async function Page() {
 
   const cookieStore = cookies()
 
-  let allMedicines = await fetch('http://localhost:3000/api/getElements', {
+  let allMedicines = await fetch(`${process.env.HOST}/api/getElements`, {
     method: 'GET',
     credentials: "include",
     headers: {cookie: cookieStore} 
