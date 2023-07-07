@@ -86,70 +86,78 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
     return(
         <>
             <InvoiceSearch searchObjs={searchObjs} receipt={receipt} setReceipt={setReceipt} data={data}/>
-
-            <table>
-                <tbody>
-                    <tr>
-                        {
-                            columns.map((column) => {
-                                return(
-                                    <th key={column}>
-                                        {column}
-                                    </th>
-                                )
-                            })
-                        }
-                        <th>
-                            Quantity
-                        </th>
-                        <th>
-                            Total
-                        </th>
-                    </tr>
-                    {
-                        Object.keys(receipt).map((id) => {
-                            let item = receipt[id]
-                            return(
-                                <tr key={id}>
+            {
+                Object.keys(receipt).length == 0 ? null : (
+                    <>
+                        <table>
+                            <tbody>
+                                <tr>
                                     {
                                         columns.map((column) => {
                                             return(
-                                                <td key={`${id}-${column}`}>
-                                                    {item[column]}
-                                                </td>
+                                                <th key={column}>
+                                                    {column}
+                                                </th>
                                             )
                                         })
                                     }
-                                    <td>
-                                        <input type="number" defaultValue={0} className="text-center text-zinc-900 rounded-md" onChange={(e) => {
-                                            item["quantity"] = parseInt(e.target.value)
-                                            item["total"] = (item["quantity"] * item[itemPrice]).toFixed(2)
-                                            setReceipt(clone(receipt))
-                                            console.log(receipt)
-                                        }} />
-                                    </td>
-                                    <td>
-                                        {item["total"]}
-                                    </td>
+                                    <th>
+                                        Quantity
+                                    </th>
+                                    <th>
+                                        Total
+                                    </th>
                                 </tr>
-                            )
-                        })
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>Net Total</td>
-                        <td></td>
-                        <td></td>
-                        {
-                            Object.keys(receipt).map(id => {
-                                netTotal += parseFloat(receipt[id]["total"])
-                            })
-                        }
-                        <td>{netTotal.toFixed(2)}</td>
-                    </tr>
-                </tfoot>
-            </table>
+                                {
+                                    Object.keys(receipt).map((id) => {
+                                        let item = receipt[id]
+                                        return(
+                                            <tr key={id}>
+                                                {
+                                                    columns.map((column) => {
+                                                        return(
+                                                            <td key={`${id}-${column}`}>
+                                                                {item[column]}
+                                                            </td>
+                                                        )
+                                                    })
+                                                }
+                                                <td>
+                                                    <input type="number" defaultValue={0} className="text-center text-zinc-900 rounded-md" onChange={(e) => {
+                                                        item["quantity"] = parseInt(e.target.value)
+                                                        item["total"] = (item["quantity"] * item[itemPrice]).toFixed(2)
+                                                        setReceipt(clone(receipt))
+                                                        console.log(receipt)
+                                                    }} />
+                                                </td>
+                                                <td>
+                                                    {item["total"]}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>Net Total</td>
+                                    <td></td>
+                                    <td></td>
+                                    {
+                                        Object.keys(receipt).map(id => {
+                                            netTotal += parseFloat(receipt[id]["total"])
+                                        })
+                                    }
+                                    <td>{netTotal.toFixed(2)}</td>
+                                </tr>
+                            </tfoot>
+                            
+                        </table>
+                        <button className="bg-zinc-900 text-white rounded-md px-5 py-2">Save & Print</button>
+                    </>
+                    
+                )
+            }
             
         </>
         
