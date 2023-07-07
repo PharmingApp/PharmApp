@@ -5,8 +5,7 @@ import clone from "@/functions/clone"
 
 let inpLength = 0;
 
-export function InvoiceSearch({ searchObjs, receipt, setReceipt, data }){
-    const [searchResults, setSearchResults] = useState(clone(searchObjs))
+export function InvoiceSearch({ searchObjs, receipt, setReceipt, data, searchResults, setSearchResults }){
 
     return(
         <>
@@ -81,17 +80,26 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
         data[id]["total"] = 0
     })
     const [receipt, setReceipt] = useState({})
+    const [searchResults, setSearchResults] = useState(clone(searchObjs))
     let netTotal = 0
 
     return(
         <>
-            <InvoiceSearch searchObjs={searchObjs} receipt={receipt} setReceipt={setReceipt} data={data}/>
+            <InvoiceSearch searchObjs={searchObjs} 
+                receipt={receipt} 
+                setReceipt={setReceipt} 
+                data={data} 
+                searchResults={searchResults} 
+                setSearchResults={setSearchResults} />
             {
                 Object.keys(receipt).length == 0 ? null : (
                     <>
                         <table>
                             <tbody>
                                 <tr>
+                                    <th>
+                                        Delete
+                                    </th>
                                     {
                                         columns.map((column) => {
                                             return(
@@ -113,6 +121,17 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
                                         let item = receipt[id]
                                         return(
                                             <tr key={id}>
+                                                <td>
+                                                    <button className="bg-zinc-900 text-white rounded-md px-5 py-2"
+                                                    onClick={(e) => {
+                                                        searchResults[item[searchFor].toLowerCase()] = id
+                                                        setSearchResults(clone(searchResults))
+                                                        delete receipt[id]
+                                                        setReceipt(clone(receipt))
+                                                    }}>
+                                                        ❌
+                                                    </button>
+                                                </td>
                                                 {
                                                     columns.map((column) => {
                                                         return(
@@ -141,6 +160,7 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
                             <tfoot>
                                 <tr>
                                     <td>Net Total</td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     {
