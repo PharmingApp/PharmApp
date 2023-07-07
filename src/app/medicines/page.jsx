@@ -1,18 +1,23 @@
 import Table from "@/src/components/Table.jsx";
-import { redirect } from 'next/navigation'
 import React from 'react';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import Link from "next/link";
 import fs from 'fs'
 import YAML from 'yaml'
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"; 
 
 export default async function Page() {
+
+  const cookieStore = cookies()
+
+  let allMedicines = await fetch('http://localhost:3000/api/getElements', {
+    method: 'GET',
+    credentials: "include",
+    headers: {cookie: cookieStore} 
+  }) 
   
-  let supabase = createServerComponentClient({ cookies })
-  let {data, error} = await supabase.from("medicines").select("*")
+  let data = await allMedicines.json()
 
   if(data.length == 0){
     data = [{id: 1, name: 'undefined'}]

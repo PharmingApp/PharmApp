@@ -15,3 +15,10 @@ model Users {
   Role             String? @default(dbgenerated("(_utf8mb4\\'Guest\\')")) @db.TinyText
   userRefreshToken String? @db.MediumText
 }
+
+model Medicines {
+  ID       Int     @id @default(autoincrement())
+  Name     String  @unique(map: "Name") @db.VarChar(255)
+  Price    Decimal @db.Decimal(8, 2)
+  quantity Int?    @db.SmallInt
+}
