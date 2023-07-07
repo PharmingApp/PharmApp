@@ -76,8 +76,8 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
 
     ids.map((id) => {
         searchObjs[data[id][searchFor].toLowerCase()] = id
-        data[id]["quantity"] = 0
-        data[id]["total"] = 0
+        data[id]["quantity"] = 1
+        data[id]["total"] = data[id][itemPrice] * data[id]["quantity"]
     })
     const [receipt, setReceipt] = useState({})
     const [searchResults, setSearchResults] = useState(clone(searchObjs))
@@ -142,7 +142,7 @@ export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantit
                                                     })
                                                 }
                                                 <td>
-                                                    <input type="number" defaultValue={0} className="text-center text-zinc-900 rounded-md" onChange={(e) => {
+                                                    <input type="number" defaultValue={1} className="text-center text-zinc-900 rounded-md" onChange={(e) => {
                                                         item["quantity"] = parseInt(e.target.value)
                                                         item["total"] = (item["quantity"] * item[itemPrice]).toFixed(2)
                                                         setReceipt(clone(receipt))
