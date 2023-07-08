@@ -29,10 +29,10 @@ function addEmptyRow(data, primaryKey){
 
     for (let i = 0; i < columns.length; i++) {
         if (columns[i] == primaryKey){
-        temp[columns[i]] = parseInt(temp[columns[i]]) + 1
+            temp[columns[i]] = parseInt(temp[columns[i]]) + 1
         }
         else{
-        temp[columns[i]] = ""
+            temp[columns[i]] = ""
         }
     }
     data.push(temp)
@@ -167,6 +167,7 @@ export default function Table({ rows, primaryKey }){
     for (let i = 0; i < columns.length; i++){
         if ((columns[i] != primaryKey) && (temp[columns[i]] != "")){
             addEmptyRow(data, primaryKey)
+            setData(clone(data))
             break
         }
     }
