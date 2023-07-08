@@ -6,14 +6,16 @@ import config from '../../config'
 
 export const dynamic = "force-dynamic"; 
 
+const skip = 0
+
 export default async function Page() {
-
   const cookieStore = cookies()
+  const limit = 3
 
-  let allMedicines = await fetch(`${process.env.HOST}/api/getElements`, {
+  let allMedicines = await fetch(`${process.env.HOST}/api/getMedicines?limit=${limit}&skip=${skip}`, {
     method: 'GET',
     credentials: "include",
-    headers: {cookie: cookieStore} 
+    headers: {cookie: cookieStore}
   }) 
   
   let data = await allMedicines.json()

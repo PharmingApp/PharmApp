@@ -17,7 +17,8 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 // If not mentioned, it is assumed to be text
 
 let inputType = {
-    "price": "number"
+    "Price": "number",
+    "quantity": "number"
 }
 
 let changes = {}
@@ -56,34 +57,29 @@ export function DataRow({ item, data, setData, primaryKey }){
                 Object.keys(item).map((column) => {
                     if (column === primaryKey){
                         return (
-                            <React.Fragment key={`${item[primaryKey]}-ids`}>
-                                <td key={`${item[primaryKey]}-del`}>
-                                    <button onClick=
-                                        {
-                                            (event) => {
-                                                event.preventDefault()
-                                                if(changes[item[primaryKey]]){
-                                                    delete changes[item[primaryKey]]
+                            <td key={`${item[primaryKey]}-del`}>
+                                <button onClick=
+                                    {
+                                        (event) => {
+                                            event.preventDefault()
+                                            if(changes[item[primaryKey]]){
+                                                delete changes[item[primaryKey]]
+                                            }
+                                            else{
+                                                if ((!deletions.includes(item[primaryKey]) && item[primaryKey] != data[data.length - 1][primaryKey])){
+                                                        deletions.push(item[primaryKey])
+
                                                 }
                                                 else{
-                                                    if ((!deletions.includes(item[primaryKey]) && item[primaryKey] != data[data.length - 1][primaryKey])){
-                                                            deletions.push(item[primaryKey])
-
-                                                    }
-                                                    else{
-                                                        return
-                                                    }
+                                                    return
                                                 }
-                                                setData(clone(data.filter((element) => element[primaryKey] != item[primaryKey])))
-                                            }       
-                                        }>
-                                        ❌
-                                    </button>
-                                </td>
-                                <td className="p-4" key={`${item[primaryKey]}-${column}`}>
-                                    {item[column]}
-                                </td>
-                            </React.Fragment>
+                                            }
+                                            setData(clone(data.filter((element) => element[primaryKey] != item[primaryKey])))
+                                        }       
+                                    }>
+                                    ❌
+                                </button>
+                            </td>
                         ) 
                     }
                     else {
@@ -141,15 +137,18 @@ export function DataRows({ data, setData, primaryKey }){
     )
 }
 
-export function TableHeaders({ columns }){
+export function TableHeaders({ columns, primaryKey }){
     return(
         <>
             <th key={"Del"}> Del</th>
             {
                 columns.map((column) => {
-                    return(
-                        <th className="p-4" key={column}>{column}</th>
-                    )
+                    if (column !== primaryKey){
+                        return(
+                            <th className="p-4" key={column}>{column}</th>
+                        )
+                    }
+                    
                 })
             }
         </>
@@ -178,7 +177,7 @@ export default function Table({ rows, primaryKey }){
             <table>
                 <tbody>
                     <tr>
-                        <TableHeaders columns={Object.keys(temp)} />
+                        <TableHeaders columns={Object.keys(temp)} primaryKey={primaryKey}/>
                     </tr>
                     
                     <DataRows 
