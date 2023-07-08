@@ -27,7 +27,7 @@ export default function Dashboard(){
                     <Link className="text-center text-zinc-100 text-[24px] font-bold" href="/medicines">Medicines</Link>
                 </div>
                 <div className="w-[300px] h-[200px] bg-zinc-700 shadow-black shadow-2xl rounded-[25px] justify-center items-center gap-2.5 flex">
-                    <div className="text-center text-zinc-100 text-[24px] font-bold">Invoice</div>
+                    <Link className="text-center text-zinc-100 text-[24px] font-bold" href="/invoice">Invoice</Link>
                 </div>
                 <div className="w-[300px] h-[200px] bg-zinc-700 shadow-black shadow-2xl rounded-[25px] justify-center items-center gap-2.5 flex">
                     <div className="text-center text-zinc-100 text-[24px] font-bold">Records</div>

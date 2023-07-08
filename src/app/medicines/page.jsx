@@ -37,7 +37,7 @@ export default async function Page() {
           </div>
         </div>
       </div>
-      <div className="flex w-fit h-fit justify-center text-white py-5">
+      <div className="flex w-full h-fit justify-center  text-white py-5">
           <Table rows={data} primaryKey={primaryKey}/>
       </div>
     </div>
