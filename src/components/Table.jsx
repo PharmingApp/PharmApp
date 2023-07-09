@@ -9,7 +9,7 @@
 
 "use client"
 
-import React, { useState } from "react"
+import { useState, cache } from "react"
 import clone from "@/functions/clone"
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
@@ -24,6 +24,15 @@ let inputType = {
 let changes = {}
 let deletions = []
 let skip = 0
+
+
+export const getMedicines = cache(async (limit, skip) => {
+    return await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
+        method: 'GET',
+        credentials: "include",
+        headers: {cookie: cookieStore}
+    }) 
+})
 
 function addEmptyRow(data, primaryKey){
     let temp = clone(data[data.length - 1])
@@ -159,7 +168,7 @@ export function TableHeaders({ columns, primaryKey }){
 export default function Table({ rows, primaryKey }){
     let supabase = createClientComponentClient()
     const [data, setData] = useState(clone(rows))
-    const limit = 50;
+    const limit = 1;
 
     let temp = clone(data[data.length - 1])
 
@@ -235,11 +244,7 @@ export default function Table({ rows, primaryKey }){
             <div>
                 <button className="bg-white rounded-[25px] px-[29px] py-[9px] text-zinc-900 text-[18px] font-bold" onClick={async (e) => {
                     skip += limit
-                    let allMedicines = await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
-                        method: 'GET',
-                        credentials: "include",
-                        headers: {cookie: cookieStore}
-                    }) 
+                    let allMedicines = await getMedicines(limit, skip)
                     let tempData = await allMedicines.json()
                     if(tempData.length == 0) {
                         skip -= limit
@@ -252,12 +257,7 @@ export default function Table({ rows, primaryKey }){
                 <button className="bg-white rounded-[25px] px-[29px] py-[9px] text-zinc-900 text-[18px] font-bold" onClick={async (e) => {
                     if (skip < limit) return skip = 0
                     skip -= limit
-                    let allMedicines = await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
-                        method: 'GET',
-                        credentials: "include",
-                        headers: {cookie: cookieStore},
-                        cache: "no-store"
-                    }) 
+                    let allMedicines = await getMedicines(limit, skip)
                     let tempData = await allMedicines.json()
                     console.log(tempData)
                     if(tempData.length == 0) return
