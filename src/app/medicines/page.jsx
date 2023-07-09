@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const cookieStore = cookies()
 
-  let allMedicines = await fetch(`${process.env.HOST}/api/getMedicines?limit=${1}&skip=${0}`, {
+  let allMedicines = await fetch(`${process.env.HOST}/api/getMedicines?limit=${50}&skip=${0}`, {
     method: 'GET',
     credentials: "include",
     headers: {cookie: cookieStore}
