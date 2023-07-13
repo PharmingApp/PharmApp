@@ -10,6 +10,7 @@ import sign from '@/functions/sign'
 
 const prisma = new PrismaClient()
 
+
 export async function POST(req){
     let accessTokenExpiry = 60 * 60 * 24;
 
