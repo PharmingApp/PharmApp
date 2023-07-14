@@ -5,7 +5,6 @@ export const revalidate = 0
 const prisma = new PrismaClient()
 
 export async function GET(req) {
-    console.log("Here")
 
     let limit = parseInt(req.nextUrl.searchParams.get('limit'))
     let skip = parseInt(req.nextUrl.searchParams.get('skip'))
@@ -13,6 +12,5 @@ export async function GET(req) {
         take: limit,
         skip: skip
     }) 
-    console.log(allMedicines)
     return NextResponse.json(allMedicines)  
 }

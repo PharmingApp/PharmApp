@@ -14,8 +14,7 @@ export default async function Page() {
     method: 'GET',
     credentials: "include",
     headers: {
-      cookie: cookieStore,
-      'Cache-Control': 'public, s-maxage=604800, stale-while-revalidate=604800'
+      cookie: cookieStore
     }
   }) 
   
