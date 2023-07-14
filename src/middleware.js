@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import verify from '@/functions/verify';
 
 export default async function middleware(req){
-    if (req.nextUrl.pathname.startsWith("/_next")) return NextResponse.next();
     if (req.nextUrl.pathname.includes(".")) return NextResponse.next();
     
 
@@ -61,8 +60,11 @@ export default async function middleware(req){
             }
         }
     }
-    
-
-
     return NextResponse.next()
 }
+
+export const config = {
+    matcher: [
+      '/((?!_next).*)',
+    ],
+  }
