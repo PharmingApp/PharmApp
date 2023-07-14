@@ -11,7 +11,6 @@
 
 import { useState, cache } from "react"
 import clone from "@/functions/clone"
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 // Possible types are all html types mentioned here at https://www.w3schools.com/html/html_form_input_types.asp
 // If not mentioned, it is assumed to be text
@@ -166,7 +165,6 @@ export function TableHeaders({ columns, primaryKey }){
 }
 
 export default function Table({ rows, primaryKey }){
-    let supabase = createClientComponentClient()
     const [data, setData] = useState(clone(rows))
     const limit = 50;
 
@@ -181,7 +179,6 @@ export default function Table({ rows, primaryKey }){
             break
         }
     }
-    
 
     return(
         <>
