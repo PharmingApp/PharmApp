@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidateTag } from 'next/cache'
+import { revalidateTag, revalidatePath  } from 'next/cache'
 
 export async function GET(req) {
     let tag = req.nextUrl.searchParams.get('tag')
