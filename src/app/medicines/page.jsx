@@ -13,7 +13,10 @@ export default async function Page() {
   let allMedicines = await fetch(`${process.env.HOST}/api/getMedicines?limit=${50}&skip=${0}`, {
     method: 'GET',
     credentials: "include",
-    headers: {cookie: cookieStore}
+    headers: {
+      cookie: cookieStore,
+      'Cache-Control': 'public, s-maxage=604800, stale-while-revalidate=604800'
+    }
   }) 
   
   let data = await allMedicines.json()
