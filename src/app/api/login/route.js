@@ -3,8 +3,8 @@
 
 import { PrismaClient } from '@prisma/client'
 import { NextResponse } from 'next/server';
-import password from 'password-hash-and-salt';
 import { cookies } from 'next/headers'
+import password from 'password-hash-and-salt';
 import random from 'random'
 import sign from '@/functions/sign'
 
