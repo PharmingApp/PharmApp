@@ -169,6 +169,8 @@ export default function Table({ rows, primaryKey }){
     const [data, setData] = useState(clone(rows))
     const limit = 50;
 
+    let router = useRouter()
+
     let temp = clone(data[data.length - 1])
 
     let columns = Object.keys(temp)
@@ -241,8 +243,7 @@ export default function Table({ rows, primaryKey }){
                               cookie: cookieStore
                             }
                           }) 
-
-                        useRouter().refresh()
+                          router.refresh()
                     }
                 }>Save Changes</button> : null
                 
