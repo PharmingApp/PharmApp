@@ -30,10 +30,7 @@ function LoginPage() {
       body: JSON.stringify({
         email: emailInput,
         password: passInput
-      }),
-      next: { 
-        tags: ['medicines']
-       }
+      })
     })
 
     let { data, error } = await res.json()

@@ -15,6 +15,9 @@ export default async function Page() {
     credentials: "include",
     headers: {
       cookie: cookieStore
+    },
+    next: { 
+      tags: ['medicines']
     }
   }) 
   

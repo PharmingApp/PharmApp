@@ -11,6 +11,7 @@
 
 import { useState, cache } from "react"
 import clone from "@/functions/clone"
+import {useRouter} from 'next/navigation'
 
 // Possible types are all html types mentioned here at https://www.w3schools.com/html/html_form_input_types.asp
 // If not mentioned, it is assumed to be text
@@ -199,40 +200,49 @@ export default function Table({ rows, primaryKey }){
                 Object.keys(changes).length > 0 || deletions.length > 0 ? <button onClick={
                     async (e) => {
 
-                        let append = []
-                        for (let id in changes){
-                            let temp = {}
-                            temp[primaryKey] = id
-                            for (let column in changes[id]){
-                                temp[column] = changes[id][column]
+                        // let append = []
+                        // for (let id in changes){
+                        //     let temp = {}
+                        //     temp[primaryKey] = id
+                        //     for (let column in changes[id]){
+                        //         temp[column] = changes[id][column]
+                        //     }
+                        //     append.push(temp)
+                        // }
+
+                        // let { data: upsertData, error: upsertError } = await supabase
+                        // .from('medicines')
+                        // .upsert(append, { onConflict: 'id'})
+                        // .select()
+
+                        // if (upsertError){
+                        //     console.log(upsertError)
+                        // }
+                        // else {
+                        //     changes = {}
+                        // }
+
+                        // let { data: deleteData, error: deleteError } = await supabase
+                        // .from('medicines')
+                        // .delete()
+                        // .in(primaryKey, deletions)
+
+                        // if (deleteError){
+                        //     console.log(deleteError)
+                        // }
+                        // else {
+                        //     deletions = []
+                        // }
+                        // setData(clone(data))
+                        await fetch(`${process.env.HOST}/api/getMedicines?tag=medicines}`, {
+                            method: 'GET',
+                            credentials: "include",
+                            headers: {
+                              cookie: cookieStore
                             }
-                            append.push(temp)
-                        }
+                          }) 
 
-                        let { data: upsertData, error: upsertError } = await supabase
-                        .from('medicines')
-                        .upsert(append, { onConflict: 'id'})
-                        .select()
-
-                        if (upsertError){
-                            console.log(upsertError)
-                        }
-                        else {
-                            changes = {}
-                        }
-
-                        let { data: deleteData, error: deleteError } = await supabase
-                        .from('medicines')
-                        .delete()
-                        .in(primaryKey, deletions)
-
-                        if (deleteError){
-                            console.log(deleteError)
-                        }
-                        else {
-                            deletions = []
-                        }
-                        setData(clone(data))
+                        useRouter().refresh()
                     }
                 }>Save Changes</button> : null
                 
