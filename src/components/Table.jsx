@@ -236,7 +236,7 @@ export default function Table({ rows, primaryKey }){
                         //     deletions = []
                         // }
                         // setData(clone(data))
-                        await fetch(`${process.env.HOST}/api/getMedicines?tag=medicines}`, {
+                        await fetch(`/api/revalidate?tag=medicines}`, {
                             method: 'GET',
                             credentials: "include",
                             headers: {
