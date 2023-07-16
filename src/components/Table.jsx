@@ -237,6 +237,8 @@ export default function Table({ rows, primaryKey }){
                         // }
                         // setData(clone(data))
                         router.refresh()
+                        setData(clone(data))
+                        console.log(data)
                     }
                 }>Save Changes</button> : null
                 
