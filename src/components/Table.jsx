@@ -236,9 +236,6 @@ export default function Table({ rows, primaryKey }){
                         //     deletions = []
                         // }
                         // setData(clone(data))
-                        router.refresh()
-                        setData(clone(data))
-                        console.log(data)
                     }
                 }>Save Changes</button> : null
                 
@@ -247,7 +244,7 @@ export default function Table({ rows, primaryKey }){
             <div>
                 <button className="bg-white rounded-[25px] px-[29px] py-[9px] text-zinc-900 text-[18px] font-bold" onClick={async (e) => {
                     skip += limit
-                    let allMedicines = await getMedicines(limit, 0)
+                    let allMedicines = await getMedicines(limit, skip)
                     let tempData = await allMedicines.json()
                     if(tempData.length == 0) {
                         skip -= limit
