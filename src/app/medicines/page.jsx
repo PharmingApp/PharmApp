@@ -3,9 +3,19 @@ import React from 'react';
 import { cookies } from 'next/headers'
 import Link from "next/link";
 import config from '../../config'
+import clone from "@/functions/clone"
 
 export const dynamic = "force-dynamic"; 
 
+function convertRowsToData(rows, primaryKey) {
+  let tempData = {}
+  rows.forEach(row => {
+      let tempRow = clone(row)
+      delete tempRow[primaryKey]
+      tempData[row[primaryKey]] = tempRow
+  })
+  return tempData
+}
 
 export default async function Page() {
   const cookieStore = cookies()
@@ -21,13 +31,17 @@ export default async function Page() {
     }
   }) 
   
-  let data = await allMedicines.json()
+  let rows = await allMedicines.json()
 
-  if(data.length == 0){
-    data = [{id: 1, name: 'undefined'}]
+  if(rows.length == 0){
+    rows = [{id: 1, name: 'undefined'}]
   }
 
   let primaryKey = config.Medicines.primaryKey
+
+  let data = convertRowsToData(rows, primaryKey)
+  console.log(data)
+  
 
   
   return (

@@ -11,5 +11,7 @@ export async function GET(req) {
         take: limit,
         skip: skip
     }) 
-    return NextResponse.json(allMedicines)  
+    return NextResponse.json(allMedicines, {
+        status: 200
+    })  
 }
