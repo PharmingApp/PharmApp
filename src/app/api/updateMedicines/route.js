@@ -21,13 +21,13 @@ export async function POST(req) {
 
             Object.keys(rowClone).map(column => {
                 if (inputType[column] == 'number'){
-                    rowClone[column] = parseInt(rowClone[column])
+                    rowClone[column] = parseFloat(rowClone[column])
                 }
             })
 
             upsertedItems.push(rowClone)
         }
-
+        console.log(upsertedItems[0])
         await prisma.$transaction(async (tx) => {
             for (let i = 0; i < append.length; i++){
                 await tx.medicines.upsert({

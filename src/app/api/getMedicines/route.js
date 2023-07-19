@@ -5,7 +5,17 @@ const prisma = new PrismaClient()
 
 export async function GET(req) {
 
-    let limit = parseInt(req.nextUrl.searchParams.get('limit'))
+    let limit = req.nextUrl.searchParams.get('limit')
+    console.log(limit)
+    if(limit !== 'undefined'){
+        limit = parseInt(limit)
+    }
+    else {
+        limit = undefined
+    }
+
+    
+
     let skip = parseInt(req.nextUrl.searchParams.get('skip'))
     const allMedicines = await prisma.medicines.findMany({
         take: limit,

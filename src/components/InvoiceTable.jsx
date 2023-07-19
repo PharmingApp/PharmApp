@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import clone from "@/functions/clone"
+import config from '../config'
 
 let inpLength = 0;
 
@@ -66,7 +67,9 @@ export function InvoiceSearch({ searchObjs, receipt, setReceipt, data, searchRes
 
 
 
-export default function InvoiceTable({ data, searchFor, primaryKey, totalQuantity, itemPrice }){
+export default function InvoiceTable({ data }){
+    let { primaryKey, Name: searchFor, quantityInStock: totalQuantity, Price: itemPrice } = config.Medicines
+
     let searchObjs = {}
 
 
