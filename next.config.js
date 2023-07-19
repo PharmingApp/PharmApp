@@ -10,6 +10,24 @@ module.exports = {
             },
             ],
         },
+        {
+            source: '/login',
+            headers: [
+            {
+                key: 'Cache-Control',
+                value: 'public, s-maxage=10000, stale-while-revalidate=10000',
+            },
+            ],
+        },
+        {
+            source: '/dashboard',
+            headers: [
+            {
+                key: 'Cache-Control',
+                value: 'public, s-maxage=10000, stale-while-revalidate=10000',
+            },
+            ],
+        },
         ]
     },
 }
