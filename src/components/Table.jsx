@@ -139,7 +139,7 @@ export default function Table({ rows, primaryKey }){
                                 changes = {}
                             }
                         }
-                        else{
+                        if(deletions.size > 0){
                             let deleteRes = await fetch(`/api/deleteMedicines`, {
                                 method: 'POST',
                                 credentials: "include",
