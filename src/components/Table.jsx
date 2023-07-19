@@ -112,62 +112,51 @@ export default function Table({ rows, primaryKey }){
             {
                 (Object.keys(changes).length > 0) || (deletions.size > 0) ? <button onClick={
                     async (e) => {
-
-                        let append = []
-                        for (let id in changes){
-                            let temp = {}
-                            temp[primaryKey] = id
-                            for (let column in changes[id]){
-                                temp[column] = changes[id][column]
+                        if (Object.keys(changes).length > 0){
+                            let append = []
+                            for (let id in changes){
+                                let temp = {}
+                                temp[primaryKey] = id
+                                for (let column in changes[id]){
+                                    temp[column] = changes[id][column]
+                                }
+                                append.push(temp)
                             }
-                            append.push(temp)
+                            
+                            let res = await fetch(`/api/updateMedicines`, {
+                                method: 'POST',
+                                credentials: "include",
+                                headers: {cookie: cookieStore},
+                                body: JSON.stringify(append)
+                            })
+
+                            let { error: upsertError } = await res.json()
+
+                            if (upsertError){
+                                console.log(upsertError)
+                            }
+                            else {
+                                changes = {}
+                            }
                         }
-                        
-                        let res = await fetch(`/api/updateMedicines`, {
-                            method: 'POST',
-                            credentials: "include",
-                            headers: {cookie: cookieStore},
-                            body: JSON.stringify(append)
-                        })
-
-                        let { error: upsertError } = await res.json()
-
-                        if (upsertError){
-                            console.log(upsertError)
-                        }
-                        else {
-                            changes = {}
-                        }
-
-                        console.log(deletions)
-
-                        let deleteRes = await fetch(`/api/deleteMedicines`, {
-                            method: 'POST',
-                            credentials: "include",
-                            headers: {cookie: cookieStore},
-                            body: JSON.stringify(Array.from(deletions))
-                        })
-
-                        let { error: deleteError } = await deleteRes.json()
-
-                        if (deleteError){
-                            console.log(deleteError)
-                        }
-                        else {
-                            deletions = []
+                        else{
+                            let deleteRes = await fetch(`/api/deleteMedicines`, {
+                                method: 'POST',
+                                credentials: "include",
+                                headers: {cookie: cookieStore},
+                                body: JSON.stringify(Array.from(deletions))
+                            })
+    
+                            let { error: deleteError } = await deleteRes.json()
+    
+                            if (deleteError){
+                                console.log(deleteError)
+                            }
+                            else {
+                                deletions = []
+                            }
                         }
 
-                        // let { data: deleteData, error: deleteError } = await supabase
-                        // .from('medicines')
-                        // .delete()
-                        // .in(primaryKey, deletions)
-
-                        // if (deleteError){
-                        //     console.log(deleteError)
-                        // }
-                        // else {
-                        //     deletions = []
-                        // }
                         setData(clone(data))
                     }
                 }>Save Changes</button> : null
