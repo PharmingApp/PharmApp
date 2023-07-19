@@ -5,6 +5,15 @@ import verify from '@/functions/verify';
 export default async function middleware(req){
     if (req.nextUrl.pathname.includes(".")) return NextResponse.next();
     
+    let serverToken = req.cookies.get('server-token')
+
+    if(serverToken){
+        serverToken = serverToken.value
+        if(serverToken === process.env.SERVER_PASS){
+            return NextResponse.next()
+        }
+    }
+    
 
     let token = req.cookies.get('pharm-app-jwt')
     let refreshToken = req.cookies.get('pharm-app-ref')

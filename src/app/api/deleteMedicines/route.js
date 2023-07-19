@@ -33,7 +33,7 @@ export async function POST(req){
             method: 'GET',
             credentials: "include",
             headers: {
-                cookie: cookieStore
+                cookie: `server-token=${process.env.SERVER_PASS}`
             },
             next: { 
                 tags: ['medicines']

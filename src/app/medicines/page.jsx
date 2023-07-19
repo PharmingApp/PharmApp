@@ -40,7 +40,6 @@ export default async function Page() {
   let primaryKey = config.Medicines.primaryKey
 
   let data = convertRowsToData(rows, primaryKey)
-  console.log(data)
   
 
   
