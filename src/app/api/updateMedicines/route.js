@@ -1,3 +1,5 @@
+// [ { ID: '14', Name: 'uhh', Price: '123', quantity: '456' } ]
+
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import config from '../../../config'
@@ -7,6 +9,7 @@ const prisma = new PrismaClient()
 
 export async function POST(req) {
     let primaryKey = config.Medicines.primaryKey
+    let inputType = config.inputType
 
     try {
         let append = await req.json();
@@ -15,21 +18,28 @@ export async function POST(req) {
         for (let i = 0; i < append.length; i++){
             let rowClone = clone(append[i])
             delete rowClone[primaryKey]
+
+            Object.keys(rowClone).map(column => {
+                if (inputType[column] == 'number'){
+                    rowClone[column] = parseInt(rowClone[column])
+                }
+            })
+
             upsertedItems.push(rowClone)
         }
 
-        const upsertMedicines = await prisma.$transaction(
-            append.map((row, index) => {
-                console.log(upsertedItems[index])
-                prisma.medicines.upsert({
+        await prisma.$transaction(async (tx) => {
+            for (let i = 0; i < append.length; i++){
+                await tx.medicines.upsert({
                     where: {
-                        [primaryKey]: row[primaryKey]
+                        [primaryKey]: parseInt(append[i][primaryKey])
                     },
-                    update: upsertedItems[index],
-                    create: upsertedItems[index]
+                    update: upsertedItems[i],
+                    create: upsertedItems[i]
                 })
-            })
-        )
+            }
+        })
+
 
         return NextResponse.json({
             error: false

@@ -3,11 +3,13 @@
 
 import clone from "@/functions/clone"
 import { useState } from "react"
+import config from '../config'
 
 // Data variables
 
 let changes = {}
 let deletions = new Set()
+let inputType = config.inputType
 
 function convertRowsToData(rows, primaryKey) {
     let tempData = {}
@@ -42,51 +44,117 @@ export default function Table({ rows, primaryKey }){
     let columns = ['Del'].concat(Object.keys(data[Object.keys(data)[0]]))
     addEmptyRow(data, setData, columns)
     return (
-        <table>
-            <thead>
-                <tr>
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {
+                            columns.map(column => <th key={column}>{column}</th>)
+                        }
+                    </tr>
+                </thead>
+                <tbody>
                     {
-                        columns.map(column => <th key={column}>{column}</th>)
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    Object.keys(data).map(key => {
-                        let row = data[key]
-                        return (
-                            <tr key={key}>
-                                {
-                                    columns.map(column => {
-                                        return (
-                                            column === "Del" ? (
-                                                <td key={`${key}-del`}>
-                                                    <button onClick={(e) => {
-                                                        if (key in changes) delete changes[key]
-                                                        else deletions.add(key)
+                        Object.keys(data).map(key => {
+                            let row = data[key]
+                            return (
+                                <tr key={key}>
+                                    {
+                                        columns.map(column => {
+                                            return (
+                                                column === "Del" ? (
+                                                    <td key={`${key}-del`}>
+                                                        <button onClick={(e) => {
+                                                            if (key in changes) delete changes[key]
+                                                            else deletions.add(key)
 
-                                                        delete data[key]
-                                                        setData(clone(data))
-                                                    }}>
-                                                        ❌
-                                                    </button>
+                                                            delete data[key]
+                                                            setData(clone(data))
+                                                        }}>
+                                                            ❌
+                                                        </button>
+                                                    </td>
+                                                ) : 
+                                                <td key={`${key}-${column}`}>
+                                                    {
+                                                        inputType[column] ? (
+                                                            <input type={inputType[column]} 
+                                                            defaultValue={row[column]} 
+                                                            className={"text-center text-zinc-900 rounded-md"} 
+                                                            onChange={(e) => {
+                                                                data[key][column] = e.target.value
+                                                                changes[key] = data[key]
+                                                                setData(clone(data))
+                                                            }}/>
+                                                        ) : (
+                                                            <input type={"text"} 
+                                                            defaultValue={row[column]} 
+                                                            className={"text-center text-zinc-900 rounded-md"} 
+                                                            onChange={(e) => {
+                                                                data[key][column] = e.target.value
+                                                                changes[key] = data[key]
+                                                                setData(clone(data))
+                                                            }}/>
+                                                        )
+                                                    }
+                                                    
                                                 </td>
-                                            ) : 
-                                            <td key={`${key}-${column}`}>
-                                                <input defaultValue={row[column]} className={"text-center text-zinc-900 rounded-md"} onChange={(e) => {
-                                                    data[key][column] = e.target.value
-                                                    changes[key] = data[key]
-                                                    setData(clone(data))
-                                                }}/>
-                                            </td>
-                                        )
-                                    })
-                                }
-                            </tr>
-                        )
-                    })
-                }
-            </tbody>
-        </table>
+                                            )
+                                        })
+                                    }
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            </table>
+
+            {
+                Object.keys(changes).length > 0 || deletions.length > 0 ? <button onClick={
+                    async (e) => {
+
+                        let append = []
+                        for (let id in changes){
+                            let temp = {}
+                            temp[primaryKey] = id
+                            for (let column in changes[id]){
+                                temp[column] = changes[id][column]
+                            }
+                            append.push(temp)
+                        }
+                        
+                        let res = await fetch(`/api/updateMedicines`, {
+                            method: 'POST',
+                            credentials: "include",
+                            headers: {cookie: cookieStore},
+                            body: JSON.stringify(append)
+                        })
+
+                        let { error: upsertError } = await res.json()
+
+                        if (upsertError){
+                            console.log(upsertError)
+                        }
+                        else {
+                            changes = {}
+                        }
+
+                        // let { data: deleteData, error: deleteError } = await supabase
+                        // .from('medicines')
+                        // .delete()
+                        // .in(primaryKey, deletions)
+
+                        // if (deleteError){
+                        //     console.log(deleteError)
+                        // }
+                        // else {
+                        //     deletions = []
+                        // }
+                        setData(clone(data))
+                    }
+                }>Save Changes</button> : null
+                
+            }
+        </>
     )
 }
