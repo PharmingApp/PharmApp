@@ -1,6 +1,6 @@
 export default {
     Medicines : {
-        primaryKey: 'ID', // Unique identifier
+        primaryKey: 'ID', // Unique identifier, must be int
         Name: 'name',
         Price: 'price',
         quantityInStock: 'quantity',

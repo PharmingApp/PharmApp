@@ -110,7 +110,7 @@ export default function Table({ rows, primaryKey }){
             </table>
 
             {
-                Object.keys(changes).length > 0 || deletions.length > 0 ? <button onClick={
+                (Object.keys(changes).length > 0) || (deletions.size > 0) ? <button onClick={
                     async (e) => {
 
                         let append = []
@@ -137,6 +137,24 @@ export default function Table({ rows, primaryKey }){
                         }
                         else {
                             changes = {}
+                        }
+
+                        console.log(deletions)
+
+                        let deleteRes = await fetch(`/api/deleteMedicines`, {
+                            method: 'POST',
+                            credentials: "include",
+                            headers: {cookie: cookieStore},
+                            body: JSON.stringify(Array.from(deletions))
+                        })
+
+                        let { error: deleteError } = await deleteRes.json()
+
+                        if (deleteError){
+                            console.log(deleteError)
+                        }
+                        else {
+                            deletions = []
                         }
 
                         // let { data: deleteData, error: deleteError } = await supabase
