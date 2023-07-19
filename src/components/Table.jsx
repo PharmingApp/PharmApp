@@ -153,10 +153,10 @@ export default function Table({ rows, primaryKey }){
                                 console.log(deleteError)
                             }
                             else {
-                                deletions = []
+                                deletions = new Set()
                             }
                         }
-                        
+
                         setData(clone(data))
                     }
                 }>Save Changes</button> : null
