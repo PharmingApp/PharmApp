@@ -29,6 +29,17 @@ export async function POST(req){
             })
         }
 
+        fetch(`${process.env.HOST}/api/getMedicines?limit=${50}&skip=${0}`, {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                cookie: cookieStore
+            },
+            next: { 
+                tags: ['medicines']
+            }
+        })
+
         return NextResponse.json({
             error: false
         },{

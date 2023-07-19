@@ -6,7 +6,7 @@ module.exports = {
             headers: [
             {
                 key: 'Cache-Control',
-                value: 'public, s-maxage=10, stale-while-revalidate=10',
+                value: 'public, s-maxage=1, stale-while-revalidate=1',
             },
             ],
         },

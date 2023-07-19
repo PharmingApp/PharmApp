@@ -156,18 +156,7 @@ export default function Table({ rows, primaryKey }){
                                 deletions = []
                             }
                         }
-
-                        fetch(`/api/getMedicines?limit=${50}&skip=${0}`, {
-                            method: 'GET',
-                            credentials: "include",
-                            headers: {
-                                cookie: cookieStore
-                            },
-                            next: { 
-                                tags: ['medicines']
-                            }
-                        }) 
-
+                        
                         setData(clone(data))
                     }
                 }>Save Changes</button> : null
