@@ -51,3 +51,9 @@ return (
     </div>
 
     
+
+CREATE TABLE Purchases(ID int PRIMARY KEY AUTO_INCREMENT, InvoiceID int, MedicineID int, Quantity int, FormerPrice Decimal(8,2));
+
+CREATE TABLE Invoices(ID int PRIMARY KEY AUTO_INCREMENT, SubTotal Decimal(8,2));
+
+CREATE TABLE Logs(ID int PRIMARY KEY AUTO_INCREMENT, MedicineID int, Date datetime, Action tinytext);
