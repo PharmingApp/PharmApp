@@ -176,7 +176,10 @@ export default function InvoiceTable({ data }){
                             </tfoot>
                             
                         </table>
-                        <button className="bg-zinc-900 text-white rounded-md px-5 py-2">Save & Print</button>
+                        <button className="bg-zinc-900 text-white rounded-md px-5 py-2"
+                        onClick={(e) => {
+                            console.log(receipt)
+                        }}>Save & Print</button>
                     </>
                     
                 )

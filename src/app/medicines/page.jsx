@@ -24,7 +24,8 @@ export default async function Page() {
     method: 'GET',
     credentials: "include",
     headers: {
-      cookie: cookieStore
+      cookie: cookieStore,
+      'Cache-Control': 'no-store'
     },
     next: { 
       tags: ['medicines']

@@ -6,7 +6,6 @@ const prisma = new PrismaClient()
 export async function GET(req) {
 
     let limit = req.nextUrl.searchParams.get('limit')
-    console.log(limit)
     if(limit !== 'undefined'){
         limit = parseInt(limit)
     }
