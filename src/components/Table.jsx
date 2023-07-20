@@ -10,7 +10,7 @@ import config from '../config'
 let changes = {}
 let deletions = new Set()
 let inputType = config.inputType
-let limit = 50
+let limit = 1
 let skip = 0
 
 function convertRowsToData(rows, primaryKey) {
@@ -173,13 +173,14 @@ export default function Table({ rows, primaryKey }){
                                             credentials: "include",
                                             headers: {cookie: cookieStore}
                                         }) 
-                    let tempData = convertRowsToData(await allMedicines.json(), primaryKey)
+                    let tempData = await allMedicines.json()
                     if(tempData.length == 0) return skip -= limit
+                    tempData = convertRowsToData(tempData, primaryKey)
                     setData(tempData)
 
                 }}>Next</button>
                 <button className="bg-white rounded-[25px] px-[29px] py-[9px] text-zinc-900 text-[18px] font-bold" onClick={async (e) => {
-                    if (skip < limit) return setSkip(0)
+                    if (skip < limit) return skip = 0
                     skip -= limit
                     let allMedicines = await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
                                             method: 'GET',
@@ -187,8 +188,9 @@ export default function Table({ rows, primaryKey }){
                                             headers: {cookie: cookieStore}
                                         }) 
                     
-                    let tempData = convertRowsToData(await allMedicines.json(), primaryKey)
+                                        let tempData = await allMedicines.json()
                     if(tempData.length == 0) return
+                    tempData = convertRowsToData(tempData, primaryKey)
                     setData(tempData)
                 }}>Prev</button>
             </div>
