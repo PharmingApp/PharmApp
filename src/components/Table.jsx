@@ -10,7 +10,7 @@ import config from '../config'
 let changes = {}
 let deletions = new Set()
 let inputType = config.inputType
-let limit = 1
+let limit = 50
 let skip = 0
 
 function convertRowsToData(rows, primaryKey) {
@@ -171,7 +171,10 @@ export default function Table({ rows, primaryKey }){
                     let allMedicines = await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
                                             method: 'GET',
                                             credentials: "include",
-                                            headers: {cookie: cookieStore}
+                                            headers: {
+                                                cookie: cookieStore,
+                                                'Cache-Control': 'no-store'
+                                            }
                                         }) 
                     let tempData = await allMedicines.json()
                     if(tempData.length == 0) return skip -= limit
@@ -185,7 +188,10 @@ export default function Table({ rows, primaryKey }){
                     let allMedicines = await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
                                             method: 'GET',
                                             credentials: "include",
-                                            headers: {cookie: cookieStore}
+                                            headers: {
+                                                cookie: cookieStore, 
+                                                'Cache-Control': 'no-store'
+                                            }
                                         }) 
                     
                                         let tempData = await allMedicines.json()
