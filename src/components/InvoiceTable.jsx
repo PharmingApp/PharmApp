@@ -5,6 +5,7 @@ import clone from "@/functions/clone"
 import config from '../config'
 
 let inpLength = 0;
+let netTotal = 0
 
 export function InvoiceSearch({ searchObjs, receipt, setReceipt, data, searchResults, setSearchResults }){
 
@@ -84,7 +85,6 @@ export default function InvoiceTable({ data }){
     })
     const [receipt, setReceipt] = useState({})
     const [searchResults, setSearchResults] = useState(clone(searchObjs))
-    let netTotal = 0
 
     return(
         <>
@@ -177,8 +177,14 @@ export default function InvoiceTable({ data }){
                             
                         </table>
                         <button className="bg-zinc-900 text-white rounded-md px-5 py-2"
-                        onClick={(e) => {
-                            console.log(receipt)
+                        onClick={async (e) => {
+                            let res = await fetch(`/api/addPurchase`, {
+                                method: 'POST',
+                                credentials: "include",
+                                headers: {cookie: cookieStore},
+                                body: JSON.stringify({ receipt, netTotal })
+                            })
+                            
                         }}>Save & Print</button>
                     </>
                     

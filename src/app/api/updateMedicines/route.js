@@ -24,7 +24,7 @@ export async function POST(req) {
                     rowClone[column] = parseFloat(rowClone[column])
                 }
             })
-
+ 
             upsertedItems.push(rowClone)
         }
         console.log(upsertedItems[0])

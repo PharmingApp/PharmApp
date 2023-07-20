@@ -24,7 +24,7 @@ model Medicines {
   Purchases Purchases[]
   Logs      Logs[]
 }
-
+ 
 model Invoices {
   ID        Int         @id @default(autoincrement())
   SubTotal  Decimal     @db.Decimal(8, 2)
