@@ -172,9 +172,9 @@ export default function Table({ rows, primaryKey }){
                                             method: 'GET',
                                             credentials: "include",
                                             headers: {
-                                                cookie: cookieStore
-                                            },
-                                            cache: 'no-store'
+                                                cookie: cookieStore,
+                                                'Cache-Control': 'no-store'
+                                            }
                                         }) 
                     let tempData = await allMedicines.json()
                     if(tempData.length == 0) return skip -= limit
@@ -189,9 +189,9 @@ export default function Table({ rows, primaryKey }){
                                             method: 'GET',
                                             credentials: "include",
                                             headers: {
-                                                cookie: cookieStore
-                                            },
-                                            cache: 'no-store'
+                                                cookie: cookieStore, 
+                                                'Cache-Control': 'no-store'
+                                            }
                                         }) 
                     
                                         let tempData = await allMedicines.json()
