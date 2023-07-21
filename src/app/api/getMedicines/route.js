@@ -13,8 +13,6 @@ export async function GET(req) {
         limit = undefined
     }
 
-    
-
     let skip = parseInt(req.nextUrl.searchParams.get('skip'))
     const allMedicines = await prisma.medicines.findMany({
         take: limit,

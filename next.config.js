@@ -3,11 +3,18 @@ module.exports = {
         return [
         {
             source: '/api/getMedicines',
+            has: [
+                {
+                    type: 'query',
+                    key: 'skip',
+                    value: '0'
+                }
+            ],
             headers: [
-            {
-                key: 'Cache-Control',
-                value: 'public, s-maxage=1, stale-while-revalidate=1',
-            },
+                {
+                    key: 'Cache-Control',
+                    value: 'public, s-maxage=1, stale-while-revalidate=1',
+                },
             ],
         },
         {

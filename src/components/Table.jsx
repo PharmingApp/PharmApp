@@ -173,7 +173,6 @@ export default function Table({ rows, primaryKey }){
                                             credentials: "include",
                                             headers: {
                                                 cookie: cookieStore,
-                                                'Cache-Control': 'no-store'
                                             }
                                         }) 
                     let tempData = await allMedicines.json()
@@ -190,7 +189,6 @@ export default function Table({ rows, primaryKey }){
                                             credentials: "include",
                                             headers: {
                                                 cookie: cookieStore, 
-                                                'Cache-Control': 'no-store'
                                             }
                                         }) 
                     
