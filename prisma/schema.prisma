@@ -16,37 +16,38 @@ model Users {
   userRefreshToken String? @db.MediumText
 }
 
-model Medicines {
-  ID        Int         @id @default(autoincrement())
-  Name      String      @unique(map: "Name") @db.VarChar(255)
-  Price     Decimal     @db.Decimal(8, 2)
-  quantity  Int?        @db.SmallInt
-  Purchases Purchases[]
-  Logs      Logs[]
-}
- 
 model Invoices {
-  ID        Int         @id @default(autoincrement())
-  SubTotal  Decimal     @db.Decimal(8, 2)
+  ID       Int      @id @default(autoincrement())
+  SubTotal Decimal  @db.Decimal(8, 2)
+  Date     DateTime @db.DateTime(0)
   Purchases Purchases[]
 }
 
 model Logs {
-  ID         Int       @id @default(autoincrement())
+  ID         Int      @id @default(autoincrement())
   MedicineID Int
-  Date       DateTime  @db.DateTime(0)
-  Action     String    @db.TinyText
+  Date       DateTime @db.DateTime(0)
+  Action     String   @db.TinyText
   Medicines  Medicines @relation(fields: [MedicineID], references: [ID])
 
   @@index([MedicineID], name: "MedicineID")
 }
 
+model Medicines {
+  ID       Int     @id @default(autoincrement())
+  Name     String  @unique(map: "Name") @db.VarChar(255)
+  Price    Decimal @db.Decimal(8, 2)
+  quantity Int?    @db.SmallInt
+  Purchases Purchases[]
+  Logs      Logs[]
+}
+
 model Purchases {
-  ID          Int       @id @default(autoincrement())
+  ID          Int     @id @default(autoincrement())
   InvoiceID   Int
   MedicineID  Int
   Quantity    Int
-  FormerPrice Decimal   @db.Decimal(8, 2)
+  FormerPrice Decimal @db.Decimal(8, 2)
   Medicines   Medicines @relation(fields: [MedicineID], references: [ID])
   Invoices    Invoices  @relation(fields: [InvoiceID], references: [ID])
 

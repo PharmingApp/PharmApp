@@ -32,14 +32,12 @@ export async function POST(req) {
             let id = invoice[invoicePrimaryKey]
 
             rows.map((row) => row[InvoiceID] = id)
-            console.log(rows)
 
             return await tx.purchases.createMany({
                 data: rows
             })
         })
 
-        console.log(transaction)
         if(transaction[count] > 0) {
             return NextResponse.json({
                 error: false

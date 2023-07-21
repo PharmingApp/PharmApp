@@ -52,8 +52,8 @@ return (
 
     
 
-CREATE TABLE Purchases(ID int PRIMARY KEY AUTO_INCREMENT, InvoiceID int, MedicineID int, Quantity int, FormerPrice Decimal(8,2));
+CREATE TABLE Purchases(ID int PRIMARY KEY AUTO_INCREMENT, InvoiceID int NOT NULL, MedicineID int NOT NULL, Quantity int NOT NULL, FormerPrice Decimal(8,2) NOT NULL);
 
-CREATE TABLE Invoices(ID int PRIMARY KEY AUTO_INCREMENT, SubTotal Decimal(8,2));
+CREATE TABLE Invoices(ID int PRIMARY KEY AUTO_INCREMENT, SubTotal Decimal(8,2) NOT NULL, Date datetime NOT NULL);
 
-CREATE TABLE Logs(ID int PRIMARY KEY AUTO_INCREMENT, MedicineID int, Date datetime, Action tinytext);
+CREATE TABLE Logs(ID int PRIMARY KEY AUTO_INCREMENT, MedicineID int NOT NULL, Date datetime NOT NULL, Action tinytext NOT NULL);
