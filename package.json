@@ -21,7 +21,7 @@
     "fs": "^0.0.1-security",
     "jose": "^4.14.4",
     "lucide-react": "^0.244.0",
-    "next": "13.4.5",
+    "next": "^13.4.11-canary.2",
     "password-hash-and-salt": "^0.1.4",
     "postcss": "8.4.24",
     "prisma": "^5.0.0",
