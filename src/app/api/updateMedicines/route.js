@@ -40,7 +40,7 @@ export async function POST(req) {
             }
         })
 
-        fetch(`${process.env.HOST}/api/getMedicines?limit=${50}&skip=${0}`, {
+        await fetch(`${process.env.HOST}/medicines`, {
             method: 'GET',
             credentials: "include",
             headers: {

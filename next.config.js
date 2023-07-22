@@ -2,14 +2,7 @@ module.exports = {
     async headers() {
         return [
         {
-            source: '/api/getMedicines',
-            has: [
-                {
-                    type: 'query',
-                    key: 'skip',
-                    value: '0'
-                }
-            ],
+            source: '/medicines',
             headers: [
                 {
                     key: 'Cache-Control',
