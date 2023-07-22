@@ -3,9 +3,8 @@ import React, { use } from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import password from 'password-hash-and-salt';
 
-
+export const dynamic = 'force-static'
 
 function LoginPage() {
   const router = useRouter()
