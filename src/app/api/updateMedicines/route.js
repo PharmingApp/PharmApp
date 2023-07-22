@@ -40,16 +40,16 @@ export async function POST(req) {
             }
         })
 
-        // fetch(`${process.env.HOST}/medicines`, {
-        //     method: 'GET',
-        //     credentials: "include",
-        //     headers: {
-        //         cookie: `server-token=${process.env.SERVER_PASS}`
-        //     },
-        //     next: { 
-        //         tags: ['medicines']
-        //     }
-        // })
+        await fetch(`${process.env.HOST}/medicines`, {
+            method: 'GET',
+            credentials: "include",
+            headers: {
+                cookie: `server-token=${process.env.SERVER_PASS}`
+            },
+            next: { 
+                tags: ['medicines']
+            }
+        })
 
         return NextResponse.json({
             error: false

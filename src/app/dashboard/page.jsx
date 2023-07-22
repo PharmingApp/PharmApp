@@ -2,9 +2,6 @@
 
 import Link from "next/link";
 
-
-export const dynamic = 'force-static'
-
 async function signOutHandle(e){
     let res = await fetch('/api/logout', {
         method: 'GET'
