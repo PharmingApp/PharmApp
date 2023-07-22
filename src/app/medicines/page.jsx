@@ -5,7 +5,7 @@ import Link from "next/link";
 import config from '../../config'
 import clone from "@/functions/clone"
 
-export const dynamic = "force-dynamic"; 
+export const revalidate = 10;
 
 function convertRowsToData(rows, primaryKey) {
   let tempData = {}
