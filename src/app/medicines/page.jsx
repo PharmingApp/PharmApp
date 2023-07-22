@@ -26,9 +26,6 @@ export default async function Page() {
     headers: {
       cookie: cookieStore
     },
-    next: { 
-      tags: ['medicines']
-    }
   }) 
   
   let rows = await allMedicines.json()

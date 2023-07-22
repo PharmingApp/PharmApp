@@ -182,7 +182,7 @@ export default function Table({ rows, primaryKey }){
 
                 }}>Next</button>
                 <button className="bg-white rounded-[25px] px-[29px] py-[9px] text-zinc-900 text-[18px] font-bold" onClick={async (e) => {
-                    if (skip < limit) // return skip = 0
+                    if (skip < limit) return skip = 0
                     skip -= limit
                     skip = 0
                     let allMedicines = await fetch(`/api/getMedicines?limit=${limit}&skip=${skip}`, {
