@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 
+
+export const runtime = 'edge'
+
 async function signOutHandle(e){
     let res = await fetch('/api/logout', {
         method: 'GET'
