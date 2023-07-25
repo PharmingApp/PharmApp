@@ -7,6 +7,12 @@ import clone from "@/functions/clone"
 
 const prisma = new PrismaClient()
 
+function currentTime() {
+    let date = new Date();
+    return date.toISOString()
+
+}
+
 export async function POST(req) {
     let primaryKey = config.Medicines.primaryKey
     let inputType = config.inputType
@@ -29,6 +35,7 @@ export async function POST(req) {
         }
         console.log(upsertedItems[0])
         await prisma.$transaction(async (tx) => {
+            let edits = []
             for (let i = 0; i < append.length; i++){
                 await tx.medicines.upsert({
                     where: {
@@ -37,18 +44,31 @@ export async function POST(req) {
                     update: upsertedItems[i],
                     create: upsertedItems[i]
                 })
-            }
-        })
 
-        await fetch(`${process.env.HOST}/medicines`, {
-            method: 'GET',
-            credentials: "include",
-            headers: {
-                cookie: `server-token=${process.env.SERVER_PASS}`
-            },
-            next: { 
-                tags: ['medicines']
+                edits.push({
+                    MedicineID: parseInt(append[i][primaryKey]),
+                    Action: 'Upsert'
+                })
             }
+            
+            let time = currentTime()
+
+            let { ID: logsID } = await tx.logs.create({
+                data: {
+                    Date: time
+                },
+                select: {
+                    ID: true
+                }
+            })
+
+            edits.map((edit) => {
+                edit['LogsID'] = logsID
+            })
+
+            await tx.edits.createMany({
+                data: edits
+            })
         })
 
         return NextResponse.json({

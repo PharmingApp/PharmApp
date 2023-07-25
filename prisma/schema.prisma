@@ -23,23 +23,13 @@ model Invoices {
   Purchases Purchases[]
 }
 
-model Logs {
-  ID         Int       @id @default(autoincrement())
-  MedicineID Int
-  Date       DateTime  @db.DateTime(0)
-  Action     String    @db.TinyText
-  Medicines  Medicines @relation(fields: [MedicineID], references: [ID])
-
-  @@index([MedicineID])
-}
-
 model Medicines {
   ID        Int         @id @default(autoincrement())
   Name      String      @unique(map: "Name") @db.VarChar(255)
   Price     Decimal     @db.Decimal(8, 2)
   quantity  Int?        @db.SmallInt
   Purchases Purchases[]
-  Logs      Logs[]
+  Edits     Edits[]
 }
 
 model Purchases {
@@ -53,4 +43,22 @@ model Purchases {
 
   @@index([MedicineID])
   @@index([InvoiceID])
+}
+
+model Edits {
+  ID         Int        @id @default(autoincrement())
+  MedicineID Int
+  LogsID     Int
+  Action     String     @db.TinyText
+  Medicines  Medicines? @relation(fields: [MedicineID], references: [ID])
+  Logs       Logs?      @relation(fields: [LogsID], references: [ID])
+
+  @@index([MedicineID])
+  @@index([LogsID])
+}
+
+model Logs {
+  ID    Int       @id @default(autoincrement())
+  Date  DateTime? @db.DateTime(0)
+  Edits Edits[]
 }

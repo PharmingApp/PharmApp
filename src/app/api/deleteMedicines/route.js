@@ -11,7 +11,6 @@ export async function POST(req){
 
     try{
         let deletions = await req.json();
-        console.log(deletions)
 
         let del = await prisma.medicines.deleteMany({
             where: {

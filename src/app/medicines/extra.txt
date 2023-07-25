@@ -56,4 +56,6 @@ CREATE TABLE Purchases(ID int PRIMARY KEY AUTO_INCREMENT, InvoiceID int NOT NULL
 
 CREATE TABLE Invoices(ID int PRIMARY KEY AUTO_INCREMENT, SubTotal Decimal(8,2) NOT NULL, Date datetime NOT NULL);
 
-CREATE TABLE Logs(ID int PRIMARY KEY AUTO_INCREMENT, MedicineID int NOT NULL, Date datetime NOT NULL, Action tinytext NOT NULL);
+CREATE TABLE Logs(ID int PRIMARY KEY AUTO_INCREMENT, Date datetime);
+
+CREATE TABLE Edits(ID int primary key auto_increment, MedicineID int NOT NULL, LogsID int NOT NULL, Action tinytext NOT NULL);
