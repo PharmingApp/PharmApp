@@ -37,7 +37,7 @@ export async function POST(req) {
         await prisma.$transaction(async (tx) => {
             let edits = []
             for (let i = 0; i < append.length; i++){
-                await tx.medicines.upsert({
+                let medicineUpdate = await tx.medicines.upsert({
                     where: {
                         [primaryKey]: parseInt(append[i][primaryKey])
                     },
@@ -45,8 +45,11 @@ export async function POST(req) {
                     create: upsertedItems[i]
                 })
 
+                console.log(medicineUpdate)
+
+
                 edits.push({
-                    MedicineID: parseInt(append[i][primaryKey]),
+                    ChangeID: parseInt(append[i][primaryKey]),
                     Action: 'Upsert'
                 })
             }

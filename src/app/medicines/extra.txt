@@ -58,4 +58,11 @@ CREATE TABLE Invoices(ID int PRIMARY KEY AUTO_INCREMENT, SubTotal Decimal(8,2) N
 
 CREATE TABLE Logs(ID int PRIMARY KEY AUTO_INCREMENT, Date datetime);
 
-CREATE TABLE Edits(ID int primary key auto_increment, MedicineID int NOT NULL, LogsID int NOT NULL, Action tinytext NOT NULL);
+CREATE TABLE Edits(ID int primary key auto_increment, ChangeID int NOT NULL, LogsID int NOT NULL, Action tinytext NOT NULL);
+
+CREATE TABLE Changes(ID int PRIMARY KEY AUTO_INCREMENT, LastChange int NOT NULL, Name varchar(255) UNIQUE NOT NULL, Price decimal (8,2) NOT NULL, Quantity smallint NOT NULL);
+
+CREATE TABLE Medicines(ID int PRIMARY KEY AUTO_INCREMENT, Name varchar(255) UNIQUE NOT NULL, Price decimal (8,2) NOT NULL, Quantity smallint NOT NULL);
+
+CREATE TABLE MedicineStatus(ID int PRIMARY KEY AUTO_INCREMENT, Deleted bool DEFAULT false, ChangeID int NOT NULL);
+

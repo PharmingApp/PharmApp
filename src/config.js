@@ -3,7 +3,7 @@ export default {
         primaryKey: 'ID', // Unique identifier, must be int
         Name: 'Name',
         Price: 'Price',
-        quantityInStock: 'quantity',
+        quantityInStock: 'Quantity',
     },
 
     Invoices : {
@@ -24,6 +24,6 @@ export default {
     // Define here for all rows, ESPECIALLY for numbers that are integers
     inputType : { 
         Price: "number",
-        quantity: "number"
+        Quantity: "number"
     }
 }

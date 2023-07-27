@@ -16,10 +16,21 @@ export async function GET(req) {
     }
 
     let skip = parseInt(req.nextUrl.searchParams.get('skip'))
-    const allMedicines = await prisma.medicines.findMany({
+    const allMedicines = await prisma.medicineStatus.findMany({
+        where: {
+            Deleted: false
+        },
+        select: {
+            Medicines: true
+        },
         take: limit,
         skip: skip
-    }) 
+    })
+
+    allMedicines.map((medicine, index) => {
+        allMedicines[index] = medicine['Medicines']
+    })
+    
     return NextResponse.json(allMedicines, {
         status: 200
     })  

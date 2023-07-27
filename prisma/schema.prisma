@@ -8,12 +8,26 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Users {
-  ID               Int     @id @default(autoincrement())
-  Email            String? @unique(map: "Email") @db.VarChar(30)
-  Password         String? @db.MediumText
-  Role             String? @default(dbgenerated("(_utf8mb4\\'Guest\\')")) @db.TinyText
-  userRefreshToken String? @db.MediumText
+model Changes {
+  ID             Int              @id @default(autoincrement())
+  LastChange     Int
+  Name           String           @unique(map: "Name") @db.VarChar(255)
+  Price          Decimal          @db.Decimal(8, 2)
+  Quantity       Int              @db.SmallInt
+  Edits          Edits[]
+  MedicineStatus MedicineStatus[]
+}
+
+model Edits {
+  ID       Int     @id @default(autoincrement())
+  ChangeID Int
+  LogsID   Int
+  Action   String  @db.TinyText
+  Changes  Changes @relation(fields: [ChangeID], references: [ID])
+  Logs     Logs    @relation(fields: [LogsID], references: [ID])
+
+  @@index([ChangeID])
+  @@index([LogsID])
 }
 
 model Invoices {
@@ -23,13 +37,19 @@ model Invoices {
   Purchases Purchases[]
 }
 
+model Logs {
+  ID    Int       @id @default(autoincrement())
+  Date  DateTime? @db.DateTime(0)
+  Edits Edits[]
+}
+
 model Medicines {
-  ID        Int         @id @default(autoincrement())
-  Name      String      @unique(map: "Name") @db.VarChar(255)
-  Price     Decimal     @db.Decimal(8, 2)
-  quantity  Int?        @db.SmallInt
-  Purchases Purchases[]
-  Edits     Edits[]
+  ID             Int              @id @default(autoincrement())
+  Name           String           @unique(map: "Name") @db.VarChar(255)
+  Price          Decimal          @db.Decimal(8, 2)
+  Quantity       Int              @db.SmallInt
+  Purchases      Purchases[]
+  MedicineStatus MedicineStatus[]
 }
 
 model Purchases {
@@ -41,24 +61,26 @@ model Purchases {
   Medicines   Medicines @relation(fields: [MedicineID], references: [ID])
   Invoices    Invoices  @relation(fields: [InvoiceID], references: [ID])
 
-  @@index([MedicineID])
   @@index([InvoiceID])
-}
-
-model Edits {
-  ID         Int        @id @default(autoincrement())
-  MedicineID Int
-  LogsID     Int
-  Action     String     @db.TinyText
-  Medicines  Medicines? @relation(fields: [MedicineID], references: [ID])
-  Logs       Logs?      @relation(fields: [LogsID], references: [ID])
-
   @@index([MedicineID])
-  @@index([LogsID])
 }
 
-model Logs {
-  ID    Int       @id @default(autoincrement())
-  Date  DateTime? @db.DateTime(0)
-  Edits Edits[]
+model Users {
+  ID               Int     @id @default(autoincrement())
+  Email            String? @unique(map: "Email") @db.VarChar(30)
+  Password         String? @db.MediumText
+  Role             String? @default(dbgenerated("(_utf8mb4\\'Guest\\')")) @db.TinyText
+  userRefreshToken String? @db.MediumText
+}
+
+model MedicineStatus {
+  ID         Int       @id @default(autoincrement())
+  Deleted    Boolean?  @default(false)
+  ChangeID   Int
+  MedicineID Int
+  Changes    Changes   @relation(fields: [ChangeID], references: [ID])
+  Medicines  Medicines @relation(fields: [MedicineID], references: [ID])
+
+  @@index([ChangeID])
+  @@index([MedicineID])
 }
