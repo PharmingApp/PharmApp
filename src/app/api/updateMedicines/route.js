@@ -44,6 +44,23 @@ export async function POST(req) {
                     update: upsertedItems[i],
                     create: upsertedItems[i]
                 })
+                
+                let time = currentTime()
+
+                // medicineUpdate = await tx.logs.create({
+                //     data: {
+                //         Date: time,
+                //         Edits: {
+                //             create: {
+                //                 data: {
+                //                     Changes: {
+
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // })
 
                 console.log(medicineUpdate)
 

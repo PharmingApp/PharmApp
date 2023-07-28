@@ -10,17 +10,17 @@ datasource db {
 
 model Changes {
   ID             Int              @id @default(autoincrement())
-  LastChange     Int
+  LastChangeID   Int
   Name           String           @unique(map: "Name") @db.VarChar(255)
   Price          Decimal          @db.Decimal(8, 2)
   Quantity       Int              @db.SmallInt
-  Edits          Edits[]
-  MedicineStatus MedicineStatus[]
+  Edits          Edits?
+  MedicineStatus MedicineStatus?
 }
 
 model Edits {
   ID       Int     @id @default(autoincrement())
-  ChangeID Int
+  ChangeID Int     @unique
   LogsID   Int
   Action   String  @db.TinyText
   Changes  Changes @relation(fields: [ChangeID], references: [ID])
@@ -49,7 +49,7 @@ model Medicines {
   Price          Decimal          @db.Decimal(8, 2)
   Quantity       Int              @db.SmallInt
   Purchases      Purchases[]
-  MedicineStatus MedicineStatus[]
+  MedicineStatus MedicineStatus?
 }
 
 model Purchases {
@@ -76,8 +76,8 @@ model Users {
 model MedicineStatus {
   ID         Int       @id @default(autoincrement())
   Deleted    Boolean?  @default(false)
-  ChangeID   Int
-  MedicineID Int
+  ChangeID   Int       @unique
+  MedicineID Int       @unique
   Changes    Changes   @relation(fields: [ChangeID], references: [ID])
   Medicines  Medicines @relation(fields: [MedicineID], references: [ID])
 
