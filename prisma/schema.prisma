@@ -9,11 +9,12 @@ datasource db {
 }
 
 model Changes {
-  ID             Int              @id @default(autoincrement())
+  ID             Int             @id @default(autoincrement())
   LastChangeID   Int
-  Name           String           @unique(map: "Name") @db.VarChar(255)
-  Price          Decimal          @db.Decimal(8, 2)
-  Quantity       Int              @db.SmallInt
+  Name           String          @unique(map: "Name") @db.VarChar(255)
+  Price          Decimal         @db.Decimal(8, 2)
+  Quantity       Int             @db.SmallInt
+  Purchases      Purchases[]
   Edits          Edits?
   MedicineStatus MedicineStatus?
 }
@@ -48,21 +49,19 @@ model Medicines {
   Name           String           @unique(map: "Name") @db.VarChar(255)
   Price          Decimal          @db.Decimal(8, 2)
   Quantity       Int              @db.SmallInt
-  Purchases      Purchases[]
   MedicineStatus MedicineStatus?
 }
 
 model Purchases {
   ID          Int       @id @default(autoincrement())
   InvoiceID   Int
-  MedicineID  Int
   Quantity    Int
-  FormerPrice Decimal   @db.Decimal(8, 2)
-  Medicines   Medicines @relation(fields: [MedicineID], references: [ID])
+  ChangeID    Int
   Invoices    Invoices  @relation(fields: [InvoiceID], references: [ID])
+  Changes     Changes   @relation(fields: [ChangeID], references: [ID])
 
   @@index([InvoiceID])
-  @@index([MedicineID])
+  @@index([ChangeID])
 }
 
 model Users {
