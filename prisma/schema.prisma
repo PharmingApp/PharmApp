@@ -10,7 +10,7 @@ datasource db {
 
 model Changes {
   ID             Int             @id @default(autoincrement())
-  LastChangeID   Int
+  LastChangeID   Int?
   Name           String          @unique(map: "Name") @db.VarChar(255)
   Price          Decimal         @db.Decimal(8, 2)
   Quantity       Int             @db.SmallInt

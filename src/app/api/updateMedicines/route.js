@@ -21,22 +21,94 @@ export async function POST(req) {
         let append = await req.json();
         let upsertedItems = []
 
-        for (let i = 0; i < append.length; i++){
-            let rowClone = clone(append[i])
-            delete rowClone[primaryKey]
+        // for (let i = 0; i < append.length; i++){
+        //     let rowClone = clone(append[i])
+        //     delete rowClone[primaryKey]
 
-            Object.keys(rowClone).map(column => {
+        //     Object.keys(rowClone).map(column => {
+        //         if (inputType[column] == 'number'){
+        //             rowClone[column] = parseFloat(rowClone[column])
+        //         }
+        //     })
+ 
+        //     upsertedItems.push(rowClone)
+        // }
+        append.map(elem => {
+            Object.keys(elem).map(column => {
                 if (inputType[column] == 'number'){
-                    rowClone[column] = parseFloat(rowClone[column])
+                    elem[column] = parseFloat(elem[column])
                 }
             })
- 
-            upsertedItems.push(rowClone)
-        }
-        console.log(upsertedItems[0])
+        })
+
         await prisma.$transaction(async (tx) => {
             let edits = []
             for (let i = 0; i < append.length; i++){
+                console.log(append[i])
+                let prim = append[i][primaryKey]
+                delete append[i][primaryKey]
+                let nextChangeId = ((await prisma.changes.aggregate({
+                    _max: {
+                        ID: true
+                    }
+                }))['_max']['ID'] + 1)
+
+                let nextMedicineId = ((await prisma.medicines.aggregate({
+                    _max: {
+                        ID: true
+                    }
+                }))['_max']['ID'] + 1)
+
+
+                console.log(nextMedicineId)
+
+                let medicineStatus = await tx.medicineStatus.upsert({
+                    where: {
+                        MedicineID: parseInt(prim)
+                    },
+                    update: {
+                        Medicines: {
+                            update: {
+                                ...append[i]
+                            }
+                        },
+                        Changes: {
+                            connectOrCreate: {
+                                where: {
+                                    ID: nextChangeId
+                                },
+                                create: {
+                                    LastChangeID: prisma.medicineStatus.ChangeID,
+                                    ...append[i]
+                                }
+                            }
+                        }
+                    },
+                    create: {
+                        Medicines: {
+                            connectOrCreate: {
+                                where: {
+                                    ID: nextMedicineId
+                                },
+                                create: {
+                                    ...append[i]
+                                }
+                            }
+                        },
+                        Changes: {
+                            connectOrCreate: {
+                                where: {
+                                    ID: nextChangeId
+                                },
+                                create: {
+                                    LastChangeID: null,
+                                    ...append[i]
+                                }
+                            }
+                        }
+                    }
+                });
+
                 let medicineUpdate = await tx.medicines.upsert({
                     where: {
                         [primaryKey]: parseInt(append[i][primaryKey])
@@ -47,20 +119,7 @@ export async function POST(req) {
                 
                 let time = currentTime()
 
-                // medicineUpdate = await tx.logs.create({
-                //     data: {
-                //         Date: time,
-                //         Edits: {
-                //             create: {
-                //                 data: {
-                //                     Changes: {
-
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // })
+                
 
                 console.log(medicineUpdate)
 
@@ -73,7 +132,7 @@ export async function POST(req) {
             
             let time = currentTime()
 
-            let { ID: logsID } = await tx.logs.create({
+            let { ID: logsID } = await tx.logs.create({ 
                 data: {
                     Date: time
                 },
@@ -108,3 +167,12 @@ export async function POST(req) {
     }
     
 }
+
+// {
+//     where: {
+//   +   ID: Int
+//     },
+//     update: undefined,
+//     create: undefined
+//   }
+//   Cuz id being passed in isnt the same thats being generated
