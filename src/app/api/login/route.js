@@ -41,8 +41,6 @@ export async function POST(req){
                     value: token,
                     httpOnly: true
                 })
-                // some more changes
-
 
                 let rand = random.int(0, 100_000_000)
 
