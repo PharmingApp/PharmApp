@@ -42,6 +42,8 @@ export async function POST(req){
                     httpOnly: true
                 })
 
+                
+
                 let rand = random.int(0, 100_000_000)
 
                 let refreshToken = await sign({ ID: User.ID, Random: rand }, process.env.JWT_REFRESH_SECRET, accessTokenExpiry * 365)
